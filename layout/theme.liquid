@@ -113,7 +113,7 @@
             {{ content_for_header }}
         {%- else -%}
             {% capture content_for_header2 %}{{ content_for_header }}{% endcapture %}
-            {{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload2" ' | replace: " src=", " data-src=" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('wnw_load', asyncLoad, false);" | replace: "DOMContentLoaded", "DOMContentLoaded2" }}
+            {{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload2" ' | replace: " src=", " data-src=" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('wnw_load', asyncLoad, false);" | replace: "DOMContentLoaded", "DOMContentLoaded2" | replace: "addEventListener('load', prefetchAssets);", "addEventListener('wnw_load', prefetchAssets);" }}
             <script>var trekkie=[];trekkie.integrations=!0;</script>
         {%- endif -%}
 
@@ -170,6 +170,8 @@ var ignore_csapp_cart_reload = true;
       
        gtag('config', 'UA-26277034-1');
       </script>
+    <script type="lazyload2" data-src="https://cdn.shopify.com/extensions/7cbc8cd8-5188-4a2d-9663-1bc67db45a79/1.0.0/assets/smile-shopify-loader.js"></script>
+      {% render 'custom-css' %}
     </head>
     <body   class="template-{{ request.page_type | handle }} body {% if page.handle == 'returns' %} bread_big{% endif %}">
         {% include 'gtm_body' %}
@@ -253,5 +255,11 @@ var ignore_csapp_cart_reload = true;
         {% include 'mlveda-currencies-style' %}
         {{ 'wnw-optimization.js' | asset_url | script_tag }}
         {{ 'checkout-discount.js' | asset_url | script_tag }}
+
+      <div id="shopify-block-6174324309569838175" class="shopify-block shopify-app-block">
+        <div class="smile-shopify-init"
+          data-channel-key="channel_o74boDpUYyF4L8WddrP9tZqs">
+        </div>
+      </div>
     </body>
 </html>

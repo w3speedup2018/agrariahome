@@ -6,12 +6,8 @@
       {% if block.type == 'filter' %}
       {% assign tag_filter = true %}
 	  {% assign has_cur_tag = false %}
-      {% assign tags = block.settings.filter_by | downcase  | replace: ' ,', ',' | replace: ', ', ',' | split: ',' %}
-      {% assign colAll = collection.all_tags | downcase %}
-
-      <script>console.log('colAll',{{ colAll | json }})</script>
-      <script>console.log('tags',{{ tags | json }})</script>
-      {% assign tagCount = 0 %}{% for tag in tags %}{% if current_tags contains tag %}{% assign has_cur_tag = true %}{% endif %}{% if colAll contains tag %}{% assign tagCount = tagCount | plus: 1 %}{% endif %}{% endfor %}
+      {% assign tags = block.settings.filter_by  | replace: ' ,', ',' | replace: ', ', ',' | split: ',' %}
+      {% assign tagCount = 0 %}{% for tag in tags %}{% if current_tags contains tag %}{% assign has_cur_tag = true %}{% endif %}{% if collection.all_tags contains tag %}{% assign tagCount = tagCount | plus: 1 %}{% endif %}{% endfor %}
 	   {% unless has_cur_tag %}
 		{% if tagCount > 0 %}
         <li class="expand-layered-nav 123" data-item="{{ block.settings.filter_by_title | handle }}_{{ forloop.index }}" {% if tagCount == 0 %}{% assign tag_filter = false %}style="display:none;"{% endif %}>
@@ -24,7 +20,7 @@
                 <li data-group="{{ fn }}" data-handle="{{ tag | handle }}" class="advanceFiler current {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | downcase }} filterTagActive">
                   {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | link_to_remove_tag: tag }}
                 </li>
-              {% elsif colAll contains tag %}
+              {% elsif collection.all_tags contains tag %}
                 <li data-group="{{ fn }}" data-handle="{{ tag | handle }}" class="advanceFiler {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | downcase }}">{{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | link_to_add_tag: tag }}</li>
               {% endif %}
             {% endfor %}
@@ -106,10 +102,4 @@
   </ul>
 </div>
 {% endif %}
-
-<style>
-  .advanceFiler {
-    text-transform: capitalize;
-  }
-</style>
 
