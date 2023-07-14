@@ -1,0 +1,158 @@
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+{% render 'spurit_uac_meta_snippet' %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  
+  {%- if canonical_url != blank  -%}
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- endif -%}
+
+  {%- if settings.favicon != blank -%}
+  <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {%- endif -%}
+  
+  {%- capture seo_title -%}
+  {%- if request.page_type == 'search' and search.performed == true -%}
+  {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+  {%- else -%}
+  {{ page_title }}
+  {%- endif -%}
+  {%- if current_tags -%}
+  {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+  {%- endif -%}
+  {%- if current_page != 1 -%}
+  &ndash; {{ 'general.meta.page' | t: page: current_page }}
+  {%- endif -%}
+  {%- assign escaped_page_title = page_title | escape -%}
+  {%- unless escaped_page_title contains shop.name -%}
+  &ndash; {{ shop.name }}
+  {%- endunless -%}
+  {%- endcapture -%}
+  <title>{{ seo_title | strip }}</title>
+
+  {%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+  
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+                             n.push=n;n.loaded=!0;n.version='2.0';n.agent='dvapptrian';n.queue=[];
+                             t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];
+                             s.parentNode.insertBefore(t,s)}(window,
+                                                             document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '1615427298674538');
+
+    fbq('track', 'PageView');
+
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt="Facebook Pixel" 
+                 src="https://www.facebook.com/tr?id=1615427298674538&ev=PageView&noscript=1"
+                 /></noscript>
+
+  <!-- End Facebook Pixel Code -->
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                                                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                              })(window,document,'script','dataLayer','GTM-PH9DD26');</script>
+  <!-- End Google Tag Manager -->
+  
+  
+  {% include 'social-meta-tags' %}
+  {% if template contains "product" %}
+  {{ 'magiczoomplus.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+  {{ 'slick.css' | asset_url | stylesheet_tag }}
+  {{ 'style.scss.css' | asset_url | stylesheet_tag }}
+  
+  <script src="{{ 'jquery.min.js' | asset_url }}"></script>  
+  {% include 'cookie_data' %}
+  {%- if request.page_type contains 'customers/' -%}
+  {{ 'customer.scss.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+  {%- endif -%}
+
+  {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+  {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+  {% if template contains "product" %}
+  <script src="{{ 'magiczoomplus.js' | asset_url }}" defer="defer"></script>
+  {% endif %}
+  <script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'custom.js' | asset_url }}" defer="defer"></script>
+  <script>
+    var theme = {
+      strings: {
+        addToCart: {{ 'products.product.add_to_cart' | t | json }},
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+		in_stock: {{ 'products.product.in_stock' | t | json }},
+        out_of_stock: {{ 'products.product.out_of_stock' | t | json }},
+        pre_order: {{ 'products.product.pre_order' | t | json }}
+      },
+    }
+  </script>
+  {{ content_for_header }}
+  
+
+  {% render 'shogun-head' %}
+</head>
+<body class="template-{{ request.page_type | handle }} body {% if page.handle == 'returns' %} bread_big{% endif %}">
+  
+  {% section 'header' %}
+  {{ content_for_layout }}
+  {% section 'footer' %}
+  {% section 'newsletter-popup' %}
+  {% include 'qty_error_popup' %}
+
+{% include 'swymSnippet' %}
+  {%include 'swym-custom'%}
+{% if template contains "product" or template contains "cart" %}
+  <!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+  <script type="text/javascript">
+    // Overrides:
+    // var afterpay_min = 0.04;            // As per your Afterpay contract.
+    // var afterpay_max = 2000.00;         // As per your Afterpay contract.
+    // var afterpay_cbt_enabled = false;   // As per your Afterpay contract; change to true to display Cross-Border Trade artwork (for AU/NZ).
+    // var afterpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+    var afterpay_product_selector = '.price_div.product_price';
+    var afterpay_cart_integration_enabled = true;
+    var afterpay_cart_static_selector = '.cart-page-wrapper .cart-total';
+
+    // Non-editable fields:
+    var afterpay_shop_currency = {{ shop.currency | json }};
+    var afterpay_cart_currency = {{ cart.currency.iso_code | json }};
+    var afterpay_shop_money_format = {{ shop.money_format | json }};
+    var afterpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+    var afterpay_theme_name = {{ theme.name | json }};
+    var afterpay_product = {{ product | json }};
+    var afterpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+    var afterpay_cart_total_price = {{ cart.total_price | json }};
+    var afterpay_js_snippet_version = '1.0.9';
+  </script>
+  <script type="text/javascript" src="https://static.afterpay.com/shopify-afterpay-javascript.js"></script>
+  <!-- End Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+{% endif %}
+  {% include 'smile-initializer' %}
+  {% render 'wholesale-now', customer: customer, template: template, product: product, cart: cart %}
+  {% include 'help_desk_script' %}
+  {% render 'preorder-now' %}
+  
+<!-- Back in Stock helper snippet -->
+{% render 'back-in-stock-helper' %}
+<!-- End Back in Stock helper snippet -->
+</body>   
+{% section 'free_products' %}
+</html>
+
+
+
+

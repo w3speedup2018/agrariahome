@@ -1,0 +1,241 @@
+{% include 'plus_pages' %}
+{% schema %}
+  {
+    "name": "Page section",
+    "settings": [
+	],
+    "blocks": [
+      {
+        "type": "single_image",
+        "name": "Full size image",
+        "settings": [
+		  {
+            "type": "checkbox",
+            "id": "show_hide",
+            "label": "Hide this"		
+          },
+          {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Desktop Image",
+			"info": "Recommended size: 1170x640 PX"
+          },
+		   {
+            "type": "image_picker",
+            "id": "mob_img",
+            "label": " Mobile Image",
+			 "info":"Recommended size: 700x550 PX"	
+          },	
+		  {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      },
+	  {
+        "type": "double_image",
+        "name": "Small size image",
+        "settings": [
+		  {
+            "type": "checkbox",
+            "id": "show_hide",
+            "label": "Hide this"		
+          },
+          {
+            "type": "image_picker",
+            "id": "img1",
+            "label": "Image 1",
+			"info": "Recommended size: 570x300 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link1",
+            "label": "Link 1"
+          },
+		  {
+            "type": "image_picker",
+            "id": "img2",
+            "label": "Image 2",
+			"info": "Recommended size: 570x300 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link2",
+            "label": "Link 2"
+          }
+        ]
+      },
+	  {
+        "type": "container_width_banner",
+        "name": "Container Width Banner",
+        "settings": [
+		  {
+            "type": "checkbox",
+            "id": "show_hide",
+            "label": "Hide this"		
+          },
+          { 
+            "type": "image_picker",
+            "id": "img_desc",
+            "label":"Desktop Image",
+            "info":"Recommended size: 1920x670 PX"	
+          },
+           { 
+            "type": "image_picker",
+            "id": "img_mob",
+            "label": "Mobile Image",
+            "info": "Recommended size: 700x550 PX"	
+          },
+          { 
+            "type": "url",
+            "id": "img_url",
+            "label":"URL"
+          }
+        ]
+      },
+	  {
+        "type": "image_with_text",
+        "name": "Image with text",
+        "settings": [
+		  {
+            "type": "checkbox",
+            "id": "show_hide",
+            "label": "Hide this"		
+          },
+		  {
+			"type":"header",
+			"content":"First Image part"
+		  },
+          {
+            "type": "image_picker",
+            "id": "img1",
+            "label": "Image",
+			"info": "Recommended size: 370x425 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link1",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "title1",
+            "label": "Title",
+			"default":"Title"
+          },
+          {
+            "type": "text",
+            "id": "subtitle1",
+            "label": "Sub title",
+			"default":"Sub title"
+          },
+          {
+            "type": "text",
+            "id": "button_text1",
+            "label": "Button Text"
+          },
+		  {
+			"type":"header",
+			"content":"Second Image part"
+		  },
+          {
+            "type": "image_picker",
+            "id": "img2",
+            "label": "Image",
+			"info": "Recommended size: 370x425 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link2",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "title2",
+            "label": "Title",
+			"default":"Title"
+          },
+          {
+            "type": "text",
+            "id": "subtitle2",
+            "label": "Sub title",
+			"default":"Sub title"
+          },
+          {
+            "type": "text",
+            "id": "button_text2",
+            "label": "Button Text"
+          },
+		  {
+			"type":"header",
+			"content":"Third Image part"
+		  },
+          {
+            "type": "image_picker",
+            "id": "img3",
+            "label": "Image",
+			"info": "Recommended size: 370x425 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link3",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "title3",
+            "label": "Title",
+			"default":"Title"
+          },
+          {
+            "type": "text",
+            "id": "subtitle3",
+            "label": "Sub title",
+			"default":"Sub title"
+          },
+          {
+            "type": "text",
+            "id": "button_text3",
+            "label": "Button Text"
+          }
+        ]
+      },
+	  {
+        "type": "featured_products",
+        "name": "Featured Products",
+        "settings": [
+		  {
+            "type": "checkbox",
+            "id": "show_hide",
+            "label": "Hide this"		
+          },
+          {
+            "type":"text",
+            "id":"title",
+            "label":"Title"
+          },
+          {
+            "type":"checkbox",
+            "id":"no_line",
+            "label":"Remove Title line"
+          },
+          {
+            "type":"collection",
+            "id":"collection",
+            "label":"Collection"
+          },
+          {
+              "type":      "range",
+              "id":        "limit",
+              "min":       5,
+              "max":        12,
+              "step":       1,
+              "label":     "Limit",
+              "default":   8
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,160 @@
+{% capture all_img_link %}
+{% assign cnttt = 0 %}
+{% for i in (1..7) %}
+{% capture img %}img{{ i }}{% endcapture %}
+{% capture link_l %}link_{{ i }}{% endcapture %}
+{% capture title %}title{{ i }}{% endcapture %}
+{% capture border %}border{{ i }}{% endcapture %}
+{% if block.settings[title] != blank or block.settings[img] != blank %}
+{% assign cnttt = cnttt | plus: 1 %}
+<li class="{% if block.settings[border] %}border-panel{% endif %}">
+  {% if block.settings[link_l] != blank %}
+  <a href="{{ block.settings[link_l] }}">
+    {% endif %}
+    {% if block.settings[title] != blank %}
+    <span>{{ block.settings[title] }}</span>
+    {% endif %}
+    {% if block.settings[img] != blank %}
+    <img class="all-f-img lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ block.settings[img] | img_url : '175x' }}" alt="{{ block.settings[img].alt }}">
+    {% endif %}
+    {% if block.settings[link_l] != blank %}
+  </a>
+  {% endif %}
+</li>
+{% endif %}
+{% endfor %}      
+{% capture cnt %}{{ cnttt }}{% endcapture %}
+{% endcapture %}
+{% if block.settings.menu_title != blank or linklists[block.settings.mega_menu].links != blank or all_img_link != blank %}
+<div class="level-top-mega">
+  <div class="content-mega-horizontal min-container">
+    <div class="mage-column">
+      {% if block.settings.menu_title != blank and linklists[block.settings.mega_menu].links != blank  %}
+      <div class="cat-mega">
+        {% if block.settings.menu_title != blank %}
+        <h4>
+          {% if block.settings.menu_url != blank %}
+          <a href="{{ block.settings.menu_url }}">
+            {% endif %}
+            <strong>{{ block.settings.menu_title }}</strong>
+            {% if block.settings.menu_url != blank %}
+          </a>
+          {% endif %}
+        </h4>
+        {% endif %}
+
+        {% if linklists[block.settings.mega_menu].links != blank %}
+        <ul>
+          {% for link in linklists[block.settings.mega_menu].links %}
+          <li class="main__link">
+            <div class="main__link-box">
+              <a href="{{ link.url }}">
+                <span>{{ link.title }}</span>
+              </a>
+
+              {% if linklists[link.handle] != empty %}
+                <div class="toggle-link"></div>
+              {% endif %}
+
+              <script>console.log({{ link.title | json }})</script>
+  <!--               {% for child_link in link.links %}
+                {% if child_link %}
+                  <div class="toggle-link"></div>
+                {% endif %}
+                {% endfor %} -->
+            </div>
+
+            <ul style="display: none;"  class="child">
+              {% for child_link in link.links %}  
+                <li class="child__link">
+                  <a href= "{{ child_link.url }}">{{ child_link.title }}</a>
+                {% if child_link.links != blank %}
+                  <ul class="grandchild">
+                  {% for grandchild_link in child_link.links %}  
+                    <li>
+                      <a href= "{{ grandchild_link.url }}">- {{ grandchild_link.title }}</a>
+                    </li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}   
+                </li>
+              {% endfor %}
+            </ul> 
+
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+      </div>
+      {% endif %}
+      {% if all_img_link != blank %}
+      <div class="fragrance total-{{ cnt }}">
+        <ul class="mega-cat-column">
+          {{ all_img_link }}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script type="lazyload2">
+  setTimeout(function(){
+    const toggleLinkNav = document.querySelectorAll('.toggle-link');
+    const subMenu = document.querySelector('.child')
+    toggleLinkNav.forEach(item => {
+      item.addEventListener('click', () => {
+        subMenu.classList.toggle('childToggle')
+      })
+    })
+  },3000);
+</script>
+
+
+<style>
+  .main__link-box {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .child__link {
+    padding-left: 15px !important;
+  }
+
+  .toggle-link {
+    width: 30px;
+    height: 15px;
+    cursor: pointer;
+    position: relative;
+    right: 0;
+  }
+
+  .childToggle {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .toggle-link:after,
+  .toggle-link::before {
+    content: "";
+    position: absolute;
+    background: #000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  
+  .toggle-link:after {
+    height: 1px;
+    width: 10px;
+  }
+
+  .toggle-link:before {
+    height: 10px;
+    width: 1px;
+  }
+</style>

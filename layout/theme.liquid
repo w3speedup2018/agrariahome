@@ -1,0 +1,257 @@
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+    {% render 'spurit_uac_meta_snippet' %}
+    <head>
+      	<style class="critical2">section.home-hero .hero-slider:not(.slick-initialized){opacity:0!important}</style>
+      	{% render 'styles-scss-css' %}
+    	{% render 'spurit_uac_open_graph_snippet' %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="theme-color" content="{{ settings.color_button }}">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" data-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        {%- if canonical_url != blank  -%}
+            <link rel="canonical" href="{{ canonical_url }}">
+        {%- endif -%}
+        {%- if settings.favicon != blank -%}
+            <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+        {%- endif -%}
+        {%- capture seo_title -%}
+        {%- if request.page_type == 'search' and search.performed == true -%}
+        {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+        {%- else -%}
+        {{ page_title }}
+        {%- endif -%}
+        {%- if current_tags -%}
+        {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+        {%- endif -%}
+        {%- if current_page != 1 -%}
+        &ndash; {{ 'general.meta.page' | t: page: current_page }}
+        {%- endif -%}
+        {%- assign escaped_page_title = page_title | escape -%}
+        {%- unless escaped_page_title contains shop.name -%}
+        &ndash; {{ shop.name }}
+        {%- endunless -%}
+        {%- endcapture -%}
+        <title>{{ seo_title | strip }}</title>
+
+        {%- if page_description -%}
+        <meta name="description" content="{{ page_description | escape }}">
+        {%- endif -%}
+
+      	{% include 'gtm_head' %}
+        {% include 'social-meta-tags' %}
+        {% if template contains "product" %}
+            <link rel="stylesheet" data-href="{{ 'magiczoomplus.css' | asset_url }}">
+        {% endif %}
+      	<link rel="stylesheet" data-href="{{ 'slick.css' | asset_url }}">
+        <link rel="stylesheet" data-href="{{ 'style.scss.css' | asset_url }}">
+        <link rel="stylesheet" data-href="{{ 'custom-agrariaome_main.css' | asset_url }}">
+        <!-- Start VWO Async SmartCode -->
+        <link rel="preconnect" href="https://dev.visualwebsiteoptimizer.com" />
+        <script type='text/javascript' id='vwoCode'>
+        window._vwo_code=window._vwo_code || (function() {
+        var account_id=315849,
+        version = 1.5,
+        settings_tolerance=2000,
+        library_tolerance=2500,
+        use_existing_jquery=false,
+        is_spa=1,
+        hide_element='body',
+        hide_element_style = 'opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important',
+        /* DO NOT EDIT BELOW THIS LINE */
+        f=false,d=document,vwoCodeEl=d.querySelector('#vwoCode'),code={use_existing_jquery:function(){return use_existing_jquery},library_tolerance:function(){return library_tolerance},hide_element_style:function(){return'{'+hide_element_style+'}'},finish:function(){if(!f){f=true;var e=d.getElementById('_vis_opt_path_hides');if(e)e.parentNode.removeChild(e)}},finished:function(){return f},load:function(e){var t=d.createElement('script');t.fetchPriority='high';t.src=e;t.type='text/javascript';t.onerror=function(){_vwo_code.finish()};d.getElementsByTagName('head')[0].appendChild(t)},getVersion:function(){return version},getMatchedCookies:function(e){var t=[];if(document.cookie){t=document.cookie.match(e)||[]}return t},getCombinationCookie:function(){var e=code.getMatchedCookies(/(?:^|;)\s?(_vis_opt_exp_\d+_combi=[^;$]*)/gi);e=e.map(function(e){try{var t=decodeURIComponent(e);if(!/_vis_opt_exp_\d+_combi=(?:\d+,?)+\s*$/.test(t)){return''}return t}catch(e){return''}});var i=[];e.forEach(function(e){var t=e.match(/([\d,]+)/g);t&&i.push(t.join('-'))});return i.join('|')},init:function(){if(d.URL.indexOf('__vwo_disable__')>-1)return;window.settings_timer=setTimeout(function(){_vwo_code.finish()},settings_tolerance);var e=d.createElement('style'),t=hide_element?hide_element+'{'+hide_element_style+'}':'',i=d.getElementsByTagName('head')[0];e.setAttribute('id','_vis_opt_path_hides');vwoCodeEl&&e.setAttribute('nonce',vwoCodeEl.nonce);e.setAttribute('type','text/css');if(e.styleSheet)e.styleSheet.cssText=t;else e.appendChild(d.createTextNode(t));i.appendChild(e);var n=this.getCombinationCookie();this.load('https://dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&f='+ +is_spa+'&vn='+version+(n?'&c='+n:''));return settings_timer}};window._vwo_settings_timer = code.init();return code;}());
+        </script>
+        <!-- End VWO Async SmartCode -->
+        <!-- Google Tag Manager -->
+        <script type="lazyload2">
+        window.dataLayer = window.dataLayer || [];
+        </script>
+        <script type="lazyload2">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PH9DD26');</script>
+        <!-- End Google Tag Manager -->
+        <script type="lazyload2" data-src="https://www.googletagmanager.com/gtag/js?id=AW-963740763"></script>
+        <script type="lazyload2">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-963740763');
+        </script>
+
+		{% render 'jquery-min' %}
+        {% include 'cookie_data' %}
+        {%- if request.page_type contains 'customers/' -%}
+        	{{ 'customer.scss.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+        {%- endif -%}
+		<script src="{{ 'option_selection.js' | shopify_asset_url }}" defer></script>
+      	<script src="{{ 'api.jquery.js' | shopify_asset_url }}" defer></script>
+        {% if template contains "product" %}
+        <script data-src="{{ 'magiczoomplus.js' | asset_url }}" type="lazyload2"></script>
+        {% endif %}
+        <script defer src="{{ 'slick.min.js' | asset_url }}"></script>
+        <script>
+            var theme = {
+                strings: {
+                    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+                    soldOut: {{ 'products.product.sold_out' | t | json }},
+                    unavailable: {{ 'products.product.unavailable' | t | json }},
+                    in_stock: {{ 'products.product.in_stock' | t | json }},
+                    out_of_stock: {{ 'products.product.out_of_stock' | t | json }},
+                    pre_order: {{ 'products.product.pre_order' | t | json }}
+                },
+            }
+        </script>
+        <script defer src="{{ 'custom.js' | asset_url }}"></script>
+
+        {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
+            {{ content_for_header }}
+        {%- else -%}
+            {% capture content_for_header2 %}{{ content_for_header }}{% endcapture %}
+            {{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload2" ' | replace: " src=", " data-src=" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('wnw_load', asyncLoad, false);" | replace: "DOMContentLoaded", "DOMContentLoaded2" }}
+            <script>var trekkie=[];trekkie.integrations=!0;</script>
+        {%- endif -%}
+
+        {% if template == 'product' and product.metafields.inventory.ShappifyHidden or product.type contains '_HIDDEN_' %}<meta name='robots' content='noindex'>{% endif %}
+        {%- render 'bold-common' -%}
+
+        {% comment %}{%- include 'bold-product' with product, hide_action: 'header' -%}
+        {%- render 'bold-common' -%}{% endcomment %}
+
+        {% render 'shogun-head' %}
+
+        {%- comment -%}
+        {% include 'kart_discount' %}
+        {%- endcomment -%}
+        {% render 'giftship' %}
+        {% render '7ozfree' %}
+        {% include 'swift_core' %}
+        <script>
+var ignore_csapp_cart_reload = true;
+</script>
+
+    	{% include 'cscode_discount' %}
+      
+      <!-- Facebook Pixel Code -->
+      <script type="lazyload2">
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window,document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+       fbq('init', '1615427298674538'); 
+      fbq('track', 'PageView');
+      </script>
+      <noscript>
+       <img height="1" width="1" 
+      src="https://www.facebook.com/tr?id=1615427298674538&ev=PageView
+      &noscript=1"/>
+      </noscript>
+      <!-- End Facebook Pixel Code -->
+      <script>
+      window.mlvedaShopCurrency = "{{ shop.currency }}";
+      window.shopCurrency = "{{ shop.currency }}";
+      window.supported_currencies = "{{ settings.mlvedaACS_supportedCurrencies }}";
+      </script>
+      <script type="lazyload2" data-src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=Ydt6YW"></script>
+      <script type="lazyload2" data-src="https://www.googletagmanager.com/gtag/js?id=UA-26277034-1"></script>
+      <script type="lazyload2">
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date());
+      
+       gtag('config', 'UA-26277034-1');
+      </script>
+    </head>
+    <body   class="template-{{ request.page_type | handle }} body {% if page.handle == 'returns' %} bread_big{% endif %}">
+        {% include 'gtm_body' %}
+        {% section 'header' %}
+        {{ content_for_layout }}
+        {% section 'footer' %}
+        {% section 'newsletter-popup' %}
+        {% include 'qty_error_popup' %}
+        {% include 'swymSnippet' %}
+        {%include 'swym-custom'%}
+
+        {% if template contains "product" %}
+          <!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+          <script type="text/javascript">
+          // Overrides:
+          // var afterpay_min = 0.04;            // As per your Afterpay contract.
+          // var afterpay_max = 2000.00;         // As per your Afterpay contract.
+          // var afterpay_cbt_enabled = false;   // As per your Afterpay contract; change to true to display Cross-Border Trade artwork (for AU/NZ).
+          // var afterpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+          var afterpay_product_selector = '.price_div.product_price';
+          var afterpay_cart_integration_enabled = true;
+          var afterpay_cart_static_selector = '.cart-page-wrapper .cart-total';
+
+          // Non-editable fields:
+          var afterpay_shop_currency = {% if shop.currency %}{{ shop.currency | json }}{% else %}Shopify?.currency?.active{% endif %};
+          var afterpay_cart_currency = {{ cart.currency.iso_code | json }};
+          var afterpay_shop_money_format = {{ shop.money_format | json }};
+          var afterpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+          var afterpay_theme_name = {{ theme.name | json }};
+          var afterpay_product = {%- include 'bold-product', output: 'json' -%};
+          var afterpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+          var afterpay_cart_total_price = {{ cart.total_price | json }};
+          var afterpay_js_snippet_version = '1.0.9';
+          </script>
+          <script type="lazyload2" data-src="https://static.afterpay.com/shopify-afterpay-javascript.js"></script>
+        <!-- End Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+        {% endif %}
+        {% if template contains "cart" %}
+          <!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+          <script type="text/javascript">
+          // Overrides:
+          // var afterpay_min = 0.04;            // As per your Afterpay contract.
+          // var afterpay_max = 2000.00;         // As per your Afterpay contract.
+          // var afterpay_cbt_enabled = false;   // As per your Afterpay contract; change to true to display Cross-Border Trade artwork (for AU/NZ).
+          // var afterpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+          var afterpay_product_selector = '.price_div.product_price';
+          var afterpay_cart_integration_enabled = true;
+          var afterpay_cart_static_selector = '.cart-page-wrapper .cart-total';
+
+          // Non-editable fields:
+          var afterpay_shop_currency = {% if shop.currency %}{{ shop.currency | json }}{% else %}Shopify?.currency?.active{% endif %};
+          var afterpay_cart_currency = {{ cart.currency.iso_code | json }};
+          var afterpay_shop_money_format = {{ shop.money_format | json }};
+          var afterpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+          var afterpay_theme_name = {{ theme.name | json }};
+          // var afterpay_product = {%- include 'bold-product', output: 'json' -%};
+          var afterpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+          var afterpay_cart_total_price = {{ cart.total_price | json }};
+          var afterpay_js_snippet_version = '1.0.9';
+          </script>
+          <script type="lazyload2" data-src="https://static.afterpay.com/shopify-afterpay-javascript.js"></script>
+        <!-- End Shopify-Afterpay JavaScript Snippet (v1.0.9) -->
+        {% endif %}
+        {% include 'smile-initializer' %}
+
+        {% comment %}   {% render 'wholesale-now', customer: customer, template: template, product: product, cart: cart %} {% endcomment %}
+
+        {% render 'preorder-now' %}
+
+        <!-- Back in Stock helper snippet -->
+        {% render 'back-in-stock-helper' %}
+        <!-- End Back in Stock helper snippet -->
+        <!-- BEGIN Accessibe Snippet -->
+        <script type="lazyload2">(function(){ var s = document.createElement('script'), e = ! document.body ? document.querySelector('head') : document.body; s.src = 'https://acsbapp.com/apps/app/dist/js/app.js'; s.async = true; s.onload = function(){ acsbJS.init({ statementLink : '', footerHtml : '', hideMobile : false, hideTrigger : false, language : 'en', position : 'left', leadColor : '#146ff8', triggerColor : '#324d76', triggerRadius : '50%', triggerPositionX : 'left', triggerPositionY : 'bottom', triggerIcon : 'people', triggerSize : 'small', triggerOffsetX : 10, triggerOffsetY : 50, mobile : { triggerSize : 'small', triggerPositionX : 'left', triggerPositionY : 'bottom', triggerOffsetX : 10, triggerOffsetY : 10, triggerRadius : '50%' } }); }; e.appendChild(s);}());</script>
+        <!-- END Accessibe Snippet -->
+        <script data-src="//cdn.shopify.com/s/files/1/0194/1736/6592/t/1/assets/booster-page-speed-optimizer.js?23" type="lazyload2"></script>
+        {% section 'free_products' %}
+        {% include 'mlveda-currencies-switcher' %}
+        {% include 'mlveda-currencies' %}
+        {% include 'mlveda-flag' %}
+        {% include 'mlveda-currencies-style' %}
+        {{ 'wnw-optimization.js' | asset_url | script_tag }}
+        {{ 'checkout-discount.js' | asset_url | script_tag }}
+    </body>
+</html>

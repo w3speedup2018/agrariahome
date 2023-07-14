@@ -1,0 +1,15 @@
+{% for block in section.blocks %}    
+  {% if block.type == 'filter' %} 
+  {% assign filterBy = block.settings.filter_by  %}
+  {% assign currentTag = cur_tag  %}
+   
+      <li class="item">
+        {% if block.settings.filter_by_title != blank %}
+          <span class="filter-label">{{ block.settings.filter_by_title }}</span>
+        {% endif %}
+        <span class="filter-value">{{ currentTag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | downcase }}</span>
+        {{ currentTag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | link_to_remove_tag: currentTag }}
+      </li>
+                  
+  {% endif %}
+{% endfor %}    

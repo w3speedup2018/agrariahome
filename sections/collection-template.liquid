@@ -1,0 +1,347 @@
+{% assign is_list = false %}
+{% if template contains '24' %}
+  {% assign limit = 24 %}
+  {% assign has24 =  true %}
+{% elsif template contains '48' %}
+  {% assign limit = 48 %}
+  {% assign has48 =  true %}
+{% elsif template contains 'all' %}
+  {% assign limit = 1000 %}
+  {% assign hasall =  true %}
+{% else %}
+  {% assign limit = 18 %}
+  {% assign has18 =  true %}
+{% endif %}
+{% if template contains 'list' %}
+  {% assign is_list = true %}
+{% endif %}
+{% if section.settings.show_breadcrumbs %}
+  {% include 'breadcrumbs' %}
+{% endif %}
+
+<style>
+  section.big-item .col-item-wrapper .col-item-inner {
+	width: 40%;
+	margin: 0 5%;
+  }
+</style>
+
+<section class="page-main-pal {% if collection.handle == 'airessence-custom-bundles' %}big-item{% endif %}" data-section="collection-template" data-handle={{collection.handle}}>
+  <div class="min-container">
+    <div class="alocolumns">
+      {% if section.settings.show_tagfilter %}
+        {%- capture all_tags_left -%} 
+        	{% include 'collection-sidebar-filter' %}
+        {%- endcapture -%}
+        {% if all_tags_left != blank %}
+          <div class="sidebar-main">
+            {{ all_tags_left }}
+          </div>
+          <script>
+            $(function() {
+              $('.advanceFiler').each(function(){
+                var a = $(this).find('a');
+                var tl = a.attr('title');
+                a.attr('title',tl.replace('cf-size-',''));
+              });
+
+              $('.advanceFiler').on('click', function(e) {
+                var el = $(this);
+                var elGroup = el.data('group');
+                var elHandle = el.data('handle');
+                var activeTagInGroup = $('.filterTagActive[data-group="'+ elGroup +'"]');
+                if ( !el.hasClass('filterTagActive')  && activeTagInGroup.size() ) {
+                  e.preventDefault();
+                  location.href = location.href.replace(activeTagInGroup.data('handle'), elHandle).replace(/(&page=\d+)|(page=\d+&)|(\?page=\d+$)/, '');
+                }
+              });
+            });
+          </script>
+        {% endif %}
+      {% endif %}
+      {% paginate collection.products by limit %}      
+      {% assign current_pro = current_page | times: limit %}
+      {% assign first = current_pro | minus: limit %}
+      <div class="collections-items {% unless section.settings.show_tagfilter %} tag_filter_disable {% endunless %} {% if all_tags_left == blank %}tag_filter_disable{% endif %}">
+       
+        {% if collection.handle == 'buy-with-prime-complimentary-2-day-shipping-with-amazon' %}
+		  <img src='https://cdn.shopify.com/s/files/1/0478/6336/5782/files/image_ddc5f652-3e91-41a8-a9f3-7836c0963067.png?v=1687941588' alt='banner' style='margin-bottom: 50px'>
+		{% endif %} 
+        
+		{% if collection.handle == 'airessence-custom-bundles' %}
+		  <img src='{{ 'banner.jpg' | asset_img_url: 'master' }}' alt='banner' style='margin-bottom: 50px'>
+		{% endif %}
+
+       <!--     {% if collection.handle == 'scented-candles' %}
+      <img
+        class="banner-collection__desctop"
+        src='https://cdn.shopify.com/s/files/1/0478/6336/5782/files/2022_Banner_CandlePromo_desktop_1170x100_34d1c0ec-d834-4fe8-9e33-c12fe1157e1a.gif?v=1667466327' 
+        alt='banner' 
+        style='margin-bottom: 50px'
+        >
+        <img
+        class="banner-collection__mobile"
+        src='https://cdn.shopify.com/s/files/1/0478/6336/5782/files/2022_Banner_CandlePromo_mobile_650x100_d76f4bd9-a091-4cc7-aeaa-8e017eac1021.gif?v=1667466327' 
+        alt='banner' 
+        style='margin-bottom: 50px; width: 100%;'
+        >
+    {% endif %}
+
+    <style>
+      .banner-collection__mobile {
+        display: none;
+      }
+
+      @media (max-width: 767px) {
+        .banner-collection__mobile {
+          display: block;
+        }
+
+        .banner-collection__desctop {
+          display: none;
+        }
+      }
+    </style> -->
+        
+<!--         {% if collection.handle == 'diffuser-refills' %}
+        	<img src='{{ 'diffuser_refills_banner.jpg' | asset_img_url: 'master' }}' alt='banner' style='margin-bottom: 50px'>
+        {% endif %} -->
+
+      {% if collection.handle == 'aera' %}
+          <a href="https://agrariahome.com/pages/agraria-x-aera">
+            <img
+              style="margin-bottom: 50px" 
+              src="https://cdn.shopify.com/s/files/1/0478/6336/5782/files/2022_Aera_ThinBanner1_1170x100_86573b62-b084-4750-9a20-f8afdc9b4b08.jpg?v=1661885542" 
+              alt="banner"
+            >
+          </a>
+      {% endif %}
+
+		{% if section.settings.collection_banner != blank %}
+        <div class="collection_banner">
+          <img src="{{ section.settings.collection_banner | img_url : 'master' }}" alt="{{ section.settings.collection_banner.alt | escape }}">
+        </div>
+        {% endif %}
+        <div class="toolbar-products">
+          {% capture toolbar_amount %}
+          <div class="toolbar-amount">
+            <p>
+              {% if paginate.items <= limit %}
+              {% assign limit = paginate.items %}
+              <span class="toolbar-number imin">
+                {% if limit > 1 %}
+                {{ 'collections.general.items_with_counts' | t: count: limit }}
+ 				{% else %}
+                {{ 'collections.general.items_with_count' | t: count: limit }}
+                {% endif %}
+              </span>
+              {% else %}
+              {{ 'collections.general.item_text' | t }}
+              <span class="toolbar-number">
+                {{ first | plus: 1 }}
+              </span> -
+              <span class="toolbar-number">
+                {{ current_pro }}
+              </span> of
+              <span class="toolbar-number">{{ paginate.items }}</span>
+              {% endif %}              
+            </p>
+          </div>
+          {% endcapture %}
+          {{ toolbar_amount }}
+          <div class="toolbar-sort-wrapper">
+            {% if section.settings.show_sortby %}
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            <div class="toolbar-sorter">
+              <label for="sort-by">{{ 'collections.sorting.title' | t }}</label>
+              <select id="sort-by" class="sort-by">
+                {%- for option in collection.sort_options -%}
+{%- include 'bold-product' with option, hide_action: 'skip' -%}
+                <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>{{ option.name }}</option>
+                {%- endfor -%}        
+              </select>
+              <a href="#" class="sorter-action {{ sort_by }}">
+                {% include 'icon-up_arrow' %}
+              </a>
+            </div>
+            {% endif %}
+            {%- capture all_cur_tags -%}{% if current_tags != blank %}{% for cur_tag in current_tags %}{% if forloop.index == 1 %}/{{ cur_tag | handle }}{% else %}+{{ cur_tag | handle }}{% endif %}{% endfor %}{% endif %}{%- endcapture -%}
+            <div class="field-limiter">
+              {% include 'field-limiter' , all_cur_tags : all_cur_tags %}       
+            </div>
+          </div>
+          <div class="cm-modes">
+            <div class="cm-modes_btns">
+              {%- capture get_cur_page -%}{% if has24 %}24{% elsif has48 %}48{% elsif hasall %}all{% endif %}{%- endcapture -%}
+              <a href="{{ collection.url }}{{ all_cur_tags }}?sort_by={{ sort_by }}{% if get_cur_page != blank %}&view={{ get_cur_page }}{% endif %}" {% unless is_list %}class="active-mode"{% endunless %}>
+                {% include 'icon-grid' %}
+              </a>
+              <a href="{{ collection.url }}{{ all_cur_tags }}?sort_by={{ sort_by }}&view=list{% if get_cur_page != blank %}{{ get_cur_page }}{% endif %}" {% if is_list %}class="active-mode"{% endif %}>
+                {% include 'icon-list' %}
+              </a>
+            </div>
+            <div class="cm-modes_count">
+              <div class="cm-modes_count-icon cm-modes_count-single">{% include 'icon-grid-single' %}</div>
+              <div class="cm-modes_count-icon cm-modes_count-double active">{% include 'icon-grid-double' %}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-item-wrapper {% if is_list %} product-list-view{% endif %}">
+          {% if collection.products.size == 0 %}
+          <div class="collection-matrix">
+            <p class="quote">{{ 'collections.general.no_matches' | t }}</p>
+          </div>
+          {% else %}
+          	  {% for product in collection.products %}
+              {% assign hide_product = true %}
+          	  {% for tag in product.tags %}	
+    			{% if tag == "hide_this_product" %}
+					{% assign hide_product = false %}
+				{% endif %}
+			  {% endfor %}
+			  {%- include 'bold-product' with product, hide_action: 'skip' -%}
+          		{% if hide_product == true %}
+                <div class="col-item-inner split__col">
+                  {% if is_list %}
+                  	{% include 'product-list-item' , col_handle: collection.handle %}         
+                  {% else %}
+                  	{% include 'product-gird-item' , col_handle: collection.handle %}         
+                  {% endif %}
+                </div>
+                {% endif %}
+              {% endfor %}
+          {% endif %}  
+        </div>
+        <div class="toolbar-products toolbar-footer">
+          {{ toolbar_amount }}
+          <div class="toolbar-sort-wrapper">
+            {% if section.settings.show_sortby %}
+            <div class="toolbar-sorter">
+              <label for="sort-by">{{ 'collections.sorting.title' | t }}</label>
+              <select id="sort-by" class="sort-by">
+                {%- for option in collection.sort_options -%}
+	{%- include 'bold-product' with option, hide_action: 'skip' -%}
+                <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>{{ option.name }}</option>
+                {%- endfor -%}                
+              </select>
+              <a href="#" class="sorter-action {{ sort_by }}">
+                {% include 'icon-up_arrow' %}
+              </a>
+            </div>
+            {% endif %}
+            <div class="field-limiter">
+              {% include 'field-limiter' , all_cur_tags : all_cur_tags %}              
+            </div>
+          </div>
+          {%- if paginate.pages > 1 -%}
+          {% include 'pagination', paginate: paginate %}
+          {%- endif -%}
+        </div>
+      </div>
+      {% endpaginate %}
+    </div>
+  </div>
+</section>
+
+{% if section.settings.show_sortby %}
+<script>
+  Shopify.queryParams = {};
+  if (location.search.length) {
+    for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+      aKeyValue = aCouples[i].split('=');
+      if (aKeyValue.length > 1) {
+        Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+      }
+    }
+  }
+  jQuery('.sort-by')
+  .val('{{ collection.sort_by | default: collection.default_sort_by | escape }}')
+       .bind('change', function() {
+    Shopify.queryParams.sort_by = jQuery(this).val();
+    location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+  });
+  
+  $(".cm-modes_count-single").on("click", function(){
+    $(".cm-modes_count-double").removeClass("active");
+    $(this).addClass("active");
+    $(".col-item-inner").removeClass("split__col");
+  });
+  
+  $(".cm-modes_count-double").on("click", function(){
+    $(".cm-modes_count-single").removeClass("active");
+    $(this).addClass("active");
+    $(".col-item-inner").addClass("split__col");
+  });
+</script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+		{
+            "type": "image_picker",
+            "id": "collection_banner",
+            "label": "Collection Banner"
+          },
+		{
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Enable Breadcrumbs",
+			"default": true
+          },
+		{
+            "type": "checkbox",
+            "id": "show_tagfilter",
+            "label": "Enable Tag Filter?",
+			"default": true
+          },
+		{
+            "type": "checkbox",
+            "id": "show_sortby",
+            "label": "Enable sort by?",
+			"default": true
+          },
+		{
+            "type": "header",
+            "content": "Link list"
+          },
+	     {
+            "type": "checkbox",
+            "id": "show_filter",
+            "label": "Display Links?"
+          },
+          {
+            "type": "link_list",
+            "id": "link_list",
+            "label": "Link List"
+          }
+	],
+	"blocks":[
+	  {  
+         "type":"filter",
+         "name":"Filter",
+		 "limit": 6,
+         "settings":[
+		  {
+            "type": "checkbox",
+            "id": "show_filter",
+            "label": "Display filter?"
+          },
+          {
+            "type": "text",
+            "id": "filter_by_title",
+            "label": "Filter by title",
+            "default": "Filter by"
+          },
+          {
+            "type": "textarea",
+            "id": "filter_by",
+            "label": "Tag filter",
+			"info": "Add tag using comma saperate"
+          }
+         ]
+      }
+	]
+  }
+{% endschema %}

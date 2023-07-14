@@ -1,0 +1,8 @@
+<div class="min-container normal_page">
+  <div class="section-header text-center">
+    <h1>{{ 'general.404.subtext' | t }}</h1>
+  </div>
+  <div class="rte">
+    {{ settings.error_html | replace : 'href="#goto_back"' , 'onclick="history.go(-1); return false;"' }}
+  </div>
+</div>	

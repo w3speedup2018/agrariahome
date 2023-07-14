@@ -1,0 +1,108 @@
+<div class="mobile-menu">
+  <div class="meu-overlay"></div>
+  <div class="close-icon">
+    {% include 'icon-close' %}
+  </div>
+  <div class="mobile-menu-wrapper">
+    <ul>
+      {% for mlink in linklists[section.settings.mobilemenu].links %}
+      <li class="first-step">
+        <a href="{{ mlink.url }}" class="mobile_toggle">{{ mlink.title | escape }}</a>
+        {% if mlink.links != blank %}
+        <div class="drop-btn">
+          {% include 'icon-down-arrow' %}
+        </div>
+        <ul>
+          {% for child in mlink.links %}
+          <li class="mob__child">
+            <div class="mob__child-wrapper">
+              <a href="{{ child.url }}">
+                <strong>{{ child.title | escape }}</strong>
+              </a>
+              {% if child.links != blank %}
+                <div class="drop-btn-submobile">
+                  {% include 'icon-down-arrow' %}
+                </div> 
+              {% endif %}
+            </div>
+
+
+            {% if child.links != blank %}
+              <ul  style="height: 0;" class="grandchild-mobile">
+                {% for grand in child.links %}
+                  <li style="width: 100%;">
+                    <a style="padding-left: 80px;" href="{{ grand.url }}">{{ grand.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+      {% if section.settings.show_setting_icon and shop.customer_accounts_enabled %}
+      {% assign cust_url = routes.account_login_url %}
+      {% if customer %}
+      {% assign cust_url = routes.account_url %}
+      {% endif %}
+      <li class="first-step">
+        <a href="{{ cust_url }}" class="mobile_toggle">{{ 'layout.customer.account' | t }}</a>
+        <div class="drop-btn">
+          {% include 'icon-down-arrow' %}
+        </div>
+        <ul>
+          {% if customer %}
+          <li><a href="{{ routes.account_url }}"><strong>{{ 'customer.account.title' | t }}</strong></a></li>
+          <li><a href="#swym-wishlist" ><strong>{{ 'customer.wishlist.title' | t }}</strong></a></li>
+          <li><a href="/checkout"><strong>{{ 'customer.account.checkout' | t }}</strong></a></li>
+          <li><a href="{{ routes.account_logout_url }}"><strong>{{ 'layout.customer.log_out' | t }}</strong></a></li>
+          {% else %}
+          <li>
+            <a href="{{ routes.account_login_url }}">
+              <strong>{{ 'customer.login.title' | t }}</strong>
+            </a>
+          </li>
+          <li>
+            <a href="{{ routes.account_register_url }}">
+              <strong>{{ 'customer.register.title' | t }}</strong>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+<style>
+.submobile {
+  height: auto !important;
+}
+
+.grandchild-mobile {
+  transition: all 0.3s ease-in-out;
+}
+
+
+.button__rotate {
+  transform: rotate(180deg);
+}
+
+
+</style>
+
+<script>
+  const toggleMobLink = document.querySelectorAll('.drop-btn-submobile')
+  
+  toggleMobLink.forEach(item => {
+    item.addEventListener('click', () => {
+      const toggleArrow = document.querySelector('.drop-btn-submobile')
+      const grandchildMobile = document.querySelector('.grandchild-mobile')
+      grandchildMobile.classList.toggle('submobile')
+      toggleArrow.classList.toggle('button__rotate')
+    })
+  })
+</script>

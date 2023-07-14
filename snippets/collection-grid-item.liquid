@@ -1,0 +1,29 @@
+{% if collection.image %}
+  {%- assign collection_image = collection.image -%}
+{% elsif collection.products.first and collection.products.first.media != empty %}
+  {%- assign collection_image = collection.products.first.featured_media.preview_image -%}
+{% else %}
+  {% assign collection_image = blank %}
+{% endif %}
+<div class="cms-item">
+  <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}">
+    {% unless collection_image == blank %}
+    <img src="{{ collection_image | img_url: '380x380' }}" alt="{{ collection_image.alt }}">
+    {% else %}
+    {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+    {{ 'product-' | append: current | placeholder_svg_tag }}
+    {% endunless %}
+    <h3>
+      {% if collection.title == blank %}
+      {{ 'general.onboarding.collection_title' | t }}
+      {% else %}
+      {{ collection.title }}
+      {% endif %}
+    </h3>
+  </a>
+  {% if collection.description == blank %}
+  <p>{{ 'general.onboarding.collection_description' | t }}</p>
+  {% else %}
+  <p>{{ collection.description }}</p>
+  {% endif %}  
+</div>

@@ -1,0 +1,105 @@
+{% assign new_label = false %}
+{% assign current_variant = bold_selected_or_first_available_variant %}
+{%- include 'bold-variant' with current_variant, output: 'none' -%}
+<div class="pr-slide-item">
+  <a href="{{ product.url | within: collection }}">
+    <div class="pr-slide-image">
+      {% unless product.featured_media == null %}
+      <img class="lazy2 lazy3" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '370x450' }}" alt="{{ product.featured_media.alt }}">
+      {% else %}
+      {{ 'product-1' | placeholder_svg_tag }}
+      {% endunless %}
+      {% unless template.suffix contains 'auto_search' %}
+      {% if product.tags contains 'new' %}
+      {% assign new_label = true %}
+      {% endif %}
+      <div class="all_label">
+        {% if new_label %}
+        <span class="product_label new">{{ 'products.product.new' | t }}</span>
+        {% endif %}
+        {% if product.compare_at_price > product.price %}
+        <span class="product_label">{{ 'products.product.special_offer' | t }}</span>
+        {% endif %}
+      </div>
+      {% endunless %}
+    </div>
+    <div class="pr-slide-content">
+      <div class="pr-slide-inner">
+<h5>{{ product.vendor }}</h5>
+
+        <p>{{ product.title | truncate: 30 }}</p>
+        <div class="product_price {% if product.compare_at_price > product.price %} is_compare{% endif %}">
+          <span class="money">{{ product.price | money }}</span>
+          {% if product.compare_at_price > product.price %}
+          <del>
+            <span class="money">{{ product.compare_at_price | money }}</span>
+          </del>
+          {% endif %}
+        </div>
+      </div>
+      <div class="pr-slide-hover">
+        {% form 'product', product, data-productid: product.id %}
+        {% assign pre_order = false %}
+        {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'continue' and current_variant.inventory_quantity <= 0 %}
+        {% assign pre_order = true %}
+        {% endif %}
+        <div class="cm-add-cart-btn">
+          <input type="hidden" name="id" data-productid="{{ product.id }}" value="{{ current_variant.id }}">
+          {% for collection in product.collections %}
+          {% if collection.handle == 'airessence-custom-bundles' %}
+            <button disabled="disabled" type="submit" {% unless current_variant %} disabled="disabled" {% else %}{% unless current_variant.available %}disabled="disabled"{% endunless %}{% endunless %} class="add_to_cart_ajax {% if current_variant.available and pre_order %}is_pre_order{% endif %}">
+              {% if current_variant.available %}
+              {% include 'icon-plus' %}
+              {% endif %}
+              {% if current_variant %}
+                {% if product.available %}
+                  {% if pre_order %}
+                  <span>{{ 'products.product.pre_order' | t }}</span>
+                  {% else %}
+                  <span>View Product</span>
+                  {% endif %}
+                {% else %}
+                <span>{{ 'products.product.sold_out' | t }}</span>
+                {% endif %}
+              {% else %}
+              <span>{{ 'products.product.sold_out' | t }}</span>
+              {% endif %}
+            </button>
+            {% break %}
+          {% else %}
+            <button type="submit" {% unless current_variant %} disabled="disabled" {% else %}{% unless current_variant.available %}disabled="disabled"{% endunless %}{% endunless %} class="add_to_cart_ajax {% if current_variant.available and pre_order %}is_pre_order{% endif %}">
+              {% if current_variant.available %}
+              {% include 'icon-plus' %}
+              {% endif %}
+              {% if current_variant %}
+                {% if product.available %}
+                  {% if pre_order %}
+                  <span>{{ 'products.product.pre_order' | t }}</span>
+                  {% else %}
+                  <span>{{ 'products.product.add_to_cart' | t }}</span>
+                  {% endif %}
+                {% else %}
+                <span>{{ 'products.product.sold_out' | t }}</span>
+                {% endif %}
+              {% else %}
+              <span>{{ 'products.product.sold_out' | t }}</span>
+              {% endif %}
+            </button>
+            {% break %}
+          {% endif %}
+            
+          {% endfor %}
+
+        </div>
+        <div class="cm-add-to-like">
+          {% include 'swym-product-view', product: product %}<button class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}"></button>
+        </div>
+        {% include 'tags_gird' %}
+        {% endform %}
+
+        {%- render 'shappify-bdl-load-bundle' -%}
+
+      </div>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,73 @@
+<div class="row">
+  {% for block in section.blocks %}
+        <div class="col-sm-4">
+          <div class="banner-box-wrap">
+            {% if block.settings.image %}
+            <a href="{{ section.settings.link }}">
+              <img class="img-fluid" src="{{ block.settings.image | img_url:'original'}}">
+            </a>
+            {% endif %}
+
+            <div class="banner-box-content">
+              <h5 class="banner-title"><a href="{{ block.settings.link }}">{{ block.settings.title }}</a></h5>
+              <p class="banner-desc">{{ block.settings.richtext }}</p>
+              <a href="{{ block.settings.link }}"><button class="shop-now-button">{{ block.settings.Btn_name }}</button></a>
+            </div>
+          </div>
+        </div>
+  {% endfor %}
+         
+       
+    </div>
+
+{% schema %}
+
+{
+  "name": "Product List",
+  "class": "testimonial-section",
+  "settings": [
+    
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Product List",
+      "settings": [
+		{
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+          
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Heading"
+         
+        },
+        {
+          "type": "richtext",
+          "id": "richtext",
+          "label": "Testimonial",
+          "default": "<p>Include some of your favorite customer quotes and feedback here as social proof, to build credibility and trust for your services and products.</p>"
+        },
+        {
+          "type": "text",
+          "id": "Btn_name",
+          "label": "Button name"
+        },
+        
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Store link"
+        }
+        
+        
+        
+      ]
+    }
+  ]
+}
+
+{% endschema %}

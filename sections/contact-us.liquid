@@ -1,0 +1,230 @@
+<section class="contact-wrapper">
+  <div class="min-container">
+    <div class="contact-page-form">
+      <h3>{{ page.title }}</h3>
+      {%- assign formId = 'ContactFormMain' -%}
+      <div class="cm-contact-form cs-custom-form s507486353">
+        <form action="https://ecf.cirkleinc.com/forms/save?shop=agrariaome.myshopify.com" class="contact-form ui-sortable ui ContactFormMain" id="67e75854190971d31b54cfc206582fac" method="post" onsubmit="return false;">
+          <p id="msg" align="center" class="form-message form-message--success"></p>
+          <div class="flex_contact">
+            <div class="form-group">
+              <label for="name">{{ 'contact.lable.name' | t }}</label>
+              <input type="text" name="name" id="name" placeholder="" title="Name" class="">
+            </div>
+            <div class="form-group">
+              <label for="email">{{ 'contact.lable.email' | t }}</label>
+              <input type="email" name="email" id="email" data-email_field="true" placeholder="" title="Email" class="">
+            </div>
+            <div class="form-group">
+              <label for="telephone">{{ 'contact.lable.telephone' | t }}</label>
+              <input type="tel" placeholder="123-123-1234" name="telephone" id="telephone" title="Telephone" class="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">{{ 'contact.lable.subject' | t }}</label>
+            <input type="text" name="subject" id="subject" placeholder="" title="Subject" class="">
+          </div>
+          <div class="form-group">
+            <label for="comment">{{ 'contact.lable.comment' | t }}</label>
+            <textarea rows="3" name="comment" id="comment" placeholder="" title="Comment" class=""></textarea>
+          </div>
+          <div class="form-group">
+            <label for="attachfiles">Attach files</label>
+            <input type="file" accept=".doc,.docs,.xml,.txt,.xls,.xlsx,.csv,.ppt,.bmp,.jpg,.jpeg,.png,.gif,.pdf,.docx" name="attach_files" id="attachfiles" title="Attach files" class="" placeholder="">
+          </div>
+          <div class="form-group">
+            <div class="recaptcha_wrap" id="g-recaptcha" id="9761ecf9-ad01-4b86-8d53-bd9c900b3779"></div>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="wholesale-btn">{{ 'contact.lable.submit' | t }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="agraria-contact-info">
+      {% if section.settings.servicetitle != blank %}
+      <h3>{{ section.settings.servicetitle }}</h3>
+      {% endif %}
+      {% if section.settings.service_address != blank %}
+      {{ section.settings.service_address }}
+      {% endif %}
+      {% if section.settings.inquirie_title != blank %}
+      <h2>{{ section.settings.inquirie_title }}</h2>
+      {% endif %}
+      {% if section.settings.inquiries_detail != blank %}
+      {{ section.settings.inquiries_detail }}
+      {% endif %}
+    </div>
+  </div>
+</section>
+<script src="https://ecf.cirkleinc.com/public/frontend/js/form-builder-helper.js"></script> <script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+  $(document).ready(function(){       
+    
+    $('.ContactFormMain').submit(function(){
+      var form = $(this);
+      var msgWrap = form.find("#msg");
+      msgWrap.html('');
+      msgWrap.attr('style','display: none');
+      msgWrap.removeClass('success-msg');
+      msgWrap.removeClass('error-msg');
+      let form_id = jQuery(form).attr('id');
+      let action = jQuery(form).attr('action');
+      var button = jQuery(form).find('[type="submit"]');
+      let formData = new FormData(jQuery('#' + form_id)[0]);
+      formData.append('form_id', form_id);
+      if (typeof csFormBeforeSend !== 'undefined' && typeof csFormBeforeSend === 'function') {
+        if (csFormBeforeSend(form_id, jQuery(form).serialize()) === false) {
+          msgWrap.addClass('error-msg');
+          return false;
+        }
+      }
+
+      var x = true;
+      var nm = form.find('#name');
+      var em = form.find('#email');
+      var te = form.find('#telephone');
+      var sub = form.find('#subject');
+      var cmnt = form.find('#comment');
+      form.find('.error_msg').remove();
+      var err_msg = 'This is a required field.';
+      if(nm.val().trim() == ''){
+        $(nm).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(nm).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(nm).parent().removeClass('haserror');
+      }
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      if(em.val().trim() == '' || !regex.test(em.val())) {
+        $(em).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(em).parent().addClass('haserror');
+        x = false;
+      } else{
+        $(em).parent().removeClass('haserror');
+      }
+      var telregex = /^(\+{0,})(\d{0,})([(]{1}\d{1,3}[)]{0,}){0,}(\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}(\s){0,}$/gm;
+      if(te.val().trim() != '') {
+        if(!telregex.test(te.val())) {
+          $(te).parent().append('<span class="error_msg">Please add valid Telephone Number.</span>');        
+          $(te).parent().addClass('haserror');
+          x = false;
+        } else{
+          $(te).parent().removeClass('haserror');
+        }
+      } else{
+        $(te).parent().removeClass('haserror');
+      }
+      if(sub.val().trim() == '') {
+        $(sub).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(sub).parent().addClass('haserror');
+        x = false;
+      } else{        
+        $(sub).parent().removeClass('haserror');
+      }
+      if(cmnt.val().trim() == ''){
+        $(cmnt).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(cmnt).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(cmnt).parent().removeClass('haserror');
+      } 
+      if( x == false){
+        //         var posi = $('.haserror:eq(0)').scrollTop() + $('.page-header').height();
+        //         $('html, body').animate({ scrollTop: posi });
+        $('.haserror:eq(0) input').trigger('focus');
+        return false;        
+      }
+      jQuery(form).find("button[type='submit']").attr('disabled', 'disabled');
+      jQuery.ajax({
+        url: action,
+        type: 'POST',
+        dataType: "JSON",
+        data: formData,
+        processData: false,
+        contentType: false,
+        crossDomain: true,
+        beforeSend: function (xhr) {
+          //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+          //xhr.setRequestHeader("Access-Control-Allow-Methods", "*");
+          //           button.parent().append('<svg id="loadingImg" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="30px" height="30px" viewBox="0 0 128 128" xml:space="preserve"><rect x="0" y="0" width="100%" height="100%" fill="#FFFFFF" /><g><path fill="#000000" d="M109.25 55.5h-36l12-12a29.54 29.54 0 0 0-49.53 12H18.75A46.04 46.04 0 0 1 96.9 31.84l12.35-12.34v36zm-90.5 17h36l-12 12a29.54 29.54 0 0 0 49.53-12h16.97A46.04 46.04 0 0 1 31.1 96.16L18.74 108.5v-36z"/><animateTransform attributeName="transform" type="rotate" from="0 64 64" to="360 64 64" dur="800ms" repeatCount="indefinite"></animateTransform></g></svg>');
+        },
+        success: function (data) {
+          jQuery(form).find("button[type='submit']").removeAttr('disabled');
+          if(!msgWrap.length)
+            msgWrap.insertAfter(jQuery(form).find('button[type="submit"]'));
+
+          if (data.status === 'success') {
+            if (typeof csFormSuccessCallback !== 'undefined' && typeof csFormSuccessCallback === 'function') {
+              if (csFormSuccessCallback(form_id, data) === false) {
+                return false;
+              }
+            }
+            jQuery('#' + form_id)[0].reset();
+            if (jQuery(form).find(".g-recaptcha").length > 0 && jQuery(form).find(".g-recaptcha").attr('data-sitekey').length > 0 && grecaptcha !== undefined) {
+              grecaptcha.reset();
+            }
+            if (data.url !== undefined && data.url !== null && data.url !== '') {
+              // window.open(data.url, "_blank");
+              location.href = data.url;
+            } else {
+              var succ_html = '<span class="svg"><svg viewBox="0 -46 417.81333 417"><path d="m159.988281 318.582031c-3.988281 4.011719-9.429687 6.25-15.082031 6.25s-11.09375-2.238281-15.082031-6.25l-120.449219-120.46875c-12.5-12.5-12.5-32.769531 0-45.246093l15.082031-15.085938c12.503907-12.5 32.75-12.5 45.25 0l75.199219 75.203125 203.199219-203.203125c12.503906-12.5 32.769531-12.5 45.25 0l15.082031 15.085938c12.5 12.5 12.5 32.765624 0 45.246093zm0 0"></path></svg></span>' + data.message;
+              msgWrap.html(succ_html);
+              msgWrap.attr('style','display: block');
+            }
+            msgWrap.addClass('success-msg');
+            setTimeout(function () {
+              if (jQuery("#viewFormModal").length > 0) {
+                jQuery("#viewFormModal").modal('hide');
+              }
+            }, 3000);
+          }
+          else {
+            msgWrap.html(data.message);
+            msgWrap.addClass('error-msg');
+            msgWrap.attr('style','display: block');
+          }
+          setTimeout(function () {
+            msgWrap.html('');
+            msgWrap.attr('style','display: none');
+            msgWrap.removeClass('success-msg');
+            msgWrap.removeClass('error-msg');
+          }, 10000);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      }).done(function(){
+        jQuery('#loadingImg').remove();
+      });
+
+    }); 
+  });
+</script>
+{% schema %}
+  {
+    "name": "Contact Us",
+    "settings": [
+	{
+      "type": "text",
+      "id": "servicetitle",
+      "label": "Service Title"		
+    },
+	{
+      "type": "richtext",
+      "id": "service_address",
+      "label": "Address"		
+    },
+	{
+      "type": "text",
+      "id": "inquirie_title",
+      "label": "Inquiries Title"		
+    },
+{
+      "type": "richtext",
+      "id": "inquiries_detail",
+      "label": "Inquiries Detail"		
+    }
+	]
+  }
+{% endschema %}

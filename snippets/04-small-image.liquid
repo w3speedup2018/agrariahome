@@ -1,0 +1,37 @@
+{% if image != blank %}
+  <div class="col-12 col-md-6 gu-half-half-image product-wrapp">
+	<div class="general--image--wrp {% if roll %} rollover {% endif %}">
+	  <a href="{{ image_url }}">
+		<img src="{{ image | img_url: "master" }}" class="head-section__img" />
+	  </a>
+	</div>
+  </div>
+{% endif %}
+
+
+{% if image_full_size != blank %}
+  <div class='min-container'>
+	<img src='{{ image_full_size | img_url: 'master' }}' alt=''>
+  </div>
+{% endif %}
+
+
+<style>
+.product-wrapp .general--image--wrp.rollover ::before {
+  border-bottom: none !important;
+  border-top: none !important;
+}
+
+.product-wrapp .general--image--wrp.rollover ::after {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.product-wrapp:hover .general--image--wrp.rollover img {
+	opacity: 1;
+}
+
+.rollover a  {
+ pointer-events: none;
+}
+</style>

@@ -1,0 +1,160 @@
+<section class="user-section">
+  <div class="container">
+    <div class="user-cover">  
+      {% if settings.content_login != blank %}
+      <div class="content_cust">
+        {{ settings.content_login }}
+      </div>
+      {% endif %}
+      <div class="user-inner-box">
+        <div class="note form-success" id="ResetSuccess" style="display:none;">
+          {{ 'customer.recover_password.success' | t }}
+        </div>
+        <div id="CustomerLoginForm" class="CustomerLoginForm">
+          {% form 'customer_login', novalidate: 'novalidate' %}
+          <div class="cm-login-main-wrapper">
+            <h2 class="account-title">
+              {{ 'customer.login.page_title' | t }}
+            </h2>
+            <div class="cm-login-form-wrapper">
+              {%- if form.errors -%}
+              <div class="form-message form-message--error">
+                {{ form.errors | default_errors }}
+              </div>
+              {%- endif -%}
+              <p class="cm-form-label">
+                {{ 'customer.login.description' | t }}
+              </p>
+              <div class="form-wrap">
+                <div class="form-group">
+                  <label class="label" for="CustomerEmail"><span>{{ 'customer.login.email' | t }}</span></label>
+                  <input type="email" name="customer[email]" id="CustomerEmail" placeholder="{{ 'customer.login.email' | t }}"{% if form.errors contains "email" %} class="error"{% endif %} autocomplete="off" autocapitalize="off" autofocus>
+                </div>
+                {% if form.password_needed %}
+                <div class="form-group">
+                  <label for="CustomerPassword" class="label"><span>{{ 'customer.login.password' | t }}</span></label>
+                  <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.login.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+                </div>
+                <div class="button">
+                  <button type="submit" class="btn login_btn" value="{{ 'customer.login.sign_in' | t }}">{{ 'customer.login.sign_in' | t }}</button>
+                  <div class="cm-forgot-pass">
+                    <a href="#" onclick="showRecoverPasswordForm();return false;">{{ 'customer.login.forgot_password' | t }}</a>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="text_required_custom">
+                  *Required fields
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cm-create-main-wrapper">
+            <h2 class="account-title">{{ 'customer.login.sign_up_title' | t }}</h2>
+            <div class="cm-create-form-wrapper">
+              <p class="cm-form-label">
+                {{ 'customer.login.sign_up_description' | t }}
+              </p>
+              <div class="create-ac-btn">
+                {{ 'customer.login.create_account' | t | customer_register_link }}
+              </div>
+            </div>
+          </div>
+          {% endform %}
+        </div>
+        <div id="RecoverPasswordForm" class="cm-reset-pass" style="display: none;">
+          <h2 class="account-title">{{ 'customer.recover_password.title' | t }}</h2>
+          <div class="form-wrap">
+            <div class="cm-reset-form">
+              {% form 'recover_customer_password' %}
+
+              <div class="form-group">
+                <p>{{ 'customer.recover_password.subtext' | t }}</p>
+              </div>
+              {{ form.errors | default_errors }}
+
+              {% if form.posted_successfully? %}
+              {% assign reset_success = true %}
+              {% endif %}
+              <div class="form-group">
+                <label for="RecoverEmail" class="label"><span>Email</span></label>
+                <input type="email" value="" name="email" id="RecoverEmail" placeholder="{{ 'customer.recover_password.email' | t }}" autocomplete="off" autocapitalize="off">
+              </div>
+              <div class="button">
+                <button type="submit" class="btn" value="{{ 'customer.recover_password.submit' | t }}">{{ 'customer.recover_password.submit' | t }}</button>
+                <div class="forgot-ps">
+                  <a href="/account/register">{{ 'customer.recover_password.sign-up' | t }}</a>
+                  <a href="/account/login">{{ 'customer.recover_password.login' | t }}</a>
+                </div>
+              </div>
+              {% endform %}
+            </div>
+          </div>
+        </div>
+
+        {% if shop.checkout.guest_login %}
+        <hr>
+        <h2>{{ 'customer.login.guest_title' | t }}</h2>
+        {% form 'guest_login' %}
+        <input type="submit" class="btn" value="{{ 'customer.login.guest_continue' | t }}">
+        {% endform %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  /*
+    Show/hide the recover password form when requested.
+  */
+  function showRecoverPasswordForm() {
+    document.getElementById('RecoverPasswordForm').style.display = 'block';
+    document.getElementById('CustomerLoginForm').style.display='none';
+  }
+
+  function hideRecoverPasswordForm() {
+    document.getElementById('RecoverPasswordForm').style.display = 'none';
+    document.getElementById('CustomerLoginForm').style.display = 'block';
+  }
+
+  // Allow deep linking to the recover password form
+  if (window.location.hash == '#recover') { showRecoverPasswordForm() }
+
+  // reset_success is only true when the reset form is
+  {% if reset_success %}
+  document.getElementById('ResetSuccess').style.display = 'block';
+  {% endif %}
+  
+   $(document).ready(function(){       
+
+     $('#customer_login').submit(function(){
+       var form = $(this);
+       var x = true;
+       var pass = form.find('#CustomerPassword');
+       var em = form.find('#CustomerEmail');
+       form.find('.error_msg').remove();
+       var err_msg = 'This is a required field.';
+
+       if(pass.val().trim() == ''){
+         $(pass).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+         $(pass).parent().addClass('haserror');
+         x = false;
+       }else{        
+         $(pass).parent().removeClass('haserror');
+       } 
+       var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+       if(em.val().trim() == '' || !regex.test(em.val())) {
+         $(em).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+         $(em).parent().addClass('haserror');
+         x = false;
+       } else{
+         $(em).parent().removeClass('haserror');
+       }
+       if( x == false){
+         $('.haserror:eq(0) input').trigger('focus');
+         return false;        
+       }
+
+     });
+   });
+  
+</script>

@@ -1,0 +1,32 @@
+<div class="col-12 col-md-4 image-with-text__wrapper">
+  <div class="product-wrapp">
+    <div class="general--image--wrp  {% if roll2 %} rollover {% endif %}">
+    	<a href="{{ url }}"><img src="{{ image | img_url: "master" }}" class="image-with-text__img" /></a>
+  	</div>
+    <a href="{{ url }}"><h3>{{ title }}</h3></a>
+    {{ text }}
+    {% if button_text != blank %}
+    <a class="image-with-text__button btn-primary">{{ button_text }}</a>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .product-wrapp .general--image--wrp.rollover ::before {
+    border-bottom: none !important;
+    border-top: none !important;
+  }
+  
+  .product-wrapp .general--image--wrp.rollover ::after {
+      border-left: none !important;
+      border-right: none !important;
+  }
+  
+  .product-wrapp:hover .general--image--wrp.rollover img {
+    opacity: 1;
+  }
+
+  .rollover a  {
+    pointer-events: none;
+  }
+  </style>

@@ -1,0 +1,32 @@
+{%- include 'bold-cart' -%}
+<div class="site-content contact-page cart-wrapper">
+  <section class="inner-page-header">
+    <div class="min-container">
+      <div class="section-title text-center">
+        <h3>{{ 'cart.general.title' | t }}</h3> 
+      </div>
+    </div>
+  </section> 
+  {% assign price = product.price | money %}
+
+  <section class="cart-page-wrapper {% if cart.item_count == 0 %}empty-message{% endif %} {% if section.settings.cart_ajax_enable %} hide_update{% endif %}">
+    <div class="min-container" id="main_cart">    
+      {% include 'cart_full' %}
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "cart_ajax_enable",
+      "label": "Enable automatic cart updates"
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+{% endcomment %}

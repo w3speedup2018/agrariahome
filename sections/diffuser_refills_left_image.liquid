@@ -1,0 +1,78 @@
+  <div class="row">
+    {% for block in section.blocks %}
+    <div class="col-sm-7">
+      {% if  block.settings.left_image %}
+      <a href="{{ block.settings.imge_link }}">
+        <img class="img-fluid" src="{{ block.settings.left_image | img_url:'original'}}">
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="col-sm-5 right-fragnances">
+      <h2>{{ block.settings.title1 }}</h2>
+      <h1>{{ block.settings.title2 }} </h1>
+      <div class="list">{{ block.settings.richtext }}
+      </div>
+      <a href="{{ block.settings.imge_link }}"><button class="shop-now-button">{{ block.settings.image_Btn_name }}</button></a>
+    </div>
+    {% endfor %}
+
+  </div>
+
+
+{% schema %}
+
+{
+  "name": "Left side Image",
+  "class": "testimonial-section",
+  "settings": [
+    
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Left side Image",
+      "settings": [
+		{
+          "type": "image_picker",
+          "id": "left_image",
+          "label": "Image"
+          
+        },
+        {
+          "type": "text",
+          "id": "title1",
+          "label": "Title"
+         
+        },{
+          "type": "text",
+          "id": "title2",
+          "label": "Heading"
+         
+        },
+        {
+          "type": "richtext",
+          "id": "richtext",
+          "label": "Testimonial",
+          "default": "<p>Include some of your favorite customer quotes and feedback here as social proof, to build credibility and trust for your services and products.</p>"
+        },
+        {
+          "type": "text",
+          "id": "image_Btn_name",
+          "label": "Button name"
+        },
+        
+        {
+          "type": "url",
+          "id": "imge_link",
+          "label": "Url"
+        }
+        
+        
+        
+      ]
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,448 @@
+{%- if product.metafields.inventory.ShappifyHidden == 'true' -%}{%- break -%}{%- endif -%}
+
+{%- include 'bold-product' with product, hide_action: 'break', output: 'none' -%}
+{%- assign current_variant = bold_selected_or_first_available_variant -%}
+{%- include 'bold-variant' with current_variant, output: 'none' -%}
+<section class="product-details" data-section="product-template">
+  <div class="min-container">{% render 'preorder-now-collection-item', product: product %}
+    <div class="alert_note"></div>
+    <div class="product-inner-wrapper">
+      <div class="cm-product-slider">
+        <div class="product-img-slider {% if product.media.size <= 1 %} less_img{% endif %}">
+          {%- for media in product.media -%}
+          {% include 'media' %}
+          {% endfor %}       
+        </div>
+        {% if product.media.size > 1 %}
+          <div class="product-img-thumb">
+            {% for media in product.media %}
+            <div class="product-img-thumb-item" data-media_id="{{ media.id }}">
+              <img src="{{ media.preview_image | img_url:'150x' }}" alt="{{ media.alt | escape }}">
+            </div>  
+            {% endfor %} 
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="Product-details-wrapper">
+        {% for tag in product.tags %}
+          {% if tag == "New" %}
+          <div class="new_badge">NEW</div>
+          {% endif %}
+        {% endfor %}
+        <div class="pr-basic-info">
+                  
+    {%- comment -%}
+              {% if product.metafields.customAttributes.fragrance != blank %}
+            <h5>{{ product.metafields.customAttributes.fragrance }}</h5>
+          {% else %}
+		       	<h5>{{ product.metafields.collection_title.collection_title }}</h5>
+          {% endif %} 
+    {%- endcomment -%}     
+
+          {% for collection in product.collections %}
+            {% if collection.handle == "lemon-verbena" or collection.handle == "neroli"  %}
+              <div style="font-weight: 800; font-size: 14px;" class="a-plus">A+ by Agraria</div>
+            {% endif %}
+          {% endfor %}
+
+         {% if product.handle == "lemon-verbena" or product.handle == "lemon-verbena-mini" or  product.handle == "lemon-verbena-e-oil"
+                or product.handle == "lemon-verbena-diffuser-combo-1" or product.handle == "lemon-verbena-room-and-linen-spray"  or product.handle == "perfumecandle-lemonverbena"
+                or product.handle == "lemon-verbena-petiteessence-diffuser-1"  or product.handle == "lemon-verbena-airessence-diffuser-1"  or product.handle == "lemon-verbena-refill-oil"
+                or product.handle == "petiteessence-collection-citrusfloral"   or product.handle == "petiteessencetm-nob-hill-collection"      
+          %}
+            <style>
+              .a-plus {
+                display: none !important;
+              }
+            </style>
+          {% endif %}
+
+          <h5>{{ product.vendor }}</h5>
+          <h4>{{ product.title }}</h4>
+        </div>
+        <div class="product-info-price">
+          {% if current_variant.compare_at_price > bold_variant_price %}
+          <h6 class="price_div product_price is_compare"><span class="money">{{ bold_variant_price | money }}</span><del><span class="money">{{ current_variant.compare_at_price | money }}</span></del></h6>
+          {% else %}
+          <h6 class="price_div product_price"><span class="money">{{ bold_variant_price | money }}</span></h6>
+          {% endif %}
+          <div class="product-info-stock-sku">
+            
+            <div class="stock-available {% unless current_variant %} hidden{% endunless %}">
+              <div class="svg_stock available {% unless current_variant.available %} hidden{% endunless %}">
+                {% include 'icon-stock-available' %}
+              </div>
+              <div class="svg_stock outofstock {% if current_variant.available %} hidden{% endif %}">
+                {% include 'icon-stock-out_of_stock' %}
+              </div>
+              <span class="stock_detail">{% if current_variant.available %}{{ 'products.product.in_stock' | t }}{% else %}{{ 'products.product.out_of_stock' | t }}{% endif %}</span>
+            </div>
+            <div class="product-attribute for_sku {% if current_variant.sku == blank %} hidden{% endif %}">
+              <span>
+                {{ 'products.product.sku' | t }}
+              </span>
+              <div class="sku-value">
+                {{ current_variant.sku }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="product-add-form">
+          {% form 'product', product, data-productid: product.id %}
+  <input type="hidden" name="properties[Fragrance]" value="{{ product.vendor }}">
+          {% if bold_variants_size > 1 %}
+          <select name="id" data-productid="{{ product.id }}" id="ProductSelect-{{ section.id }}" class="product-form__variants no-js hidden">
+            {% for variant in product.variants %}
+{%- include 'bold-variant' with variant, hide_action: 'skip' -%}
+            <option value="{{ variant.id }}" {%- if variant == current_variant %} selected="selected" {%- endif -%}>{{ variant.title }}  {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}</option>
+            {% endfor %}
+          </select>
+          
+          
+          
+
+          
+          {% else %}
+          <div class="bold_options" data-product-id="{{ product.id }}"></div>
+          <input type="hidden" name="id" data-productid="{{ product.id }}" value="{{ current_variant.id }}">
+          {% endif %}
+          <div class="product_page_form">
+            {% if section.settings.show_quantity_selector %}
+            <div class="field-qty">
+              <button type="button" class="reduced qty_change">
+                {% include 'icon-add_to_cart-minus' %}
+              </button>
+              <input type="number" id="Quantity-{{ section.id }}"
+                     name="quantity" value="1" min="1" pattern="[0-9]*"
+                     class="product-form__input product-form__input--quantity" data-available_variant="{% if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' %}{{ current_variant.inventory_quantity }}{% else %}countinue{% endif %}">
+              <button type="button" class="increase qty_change">
+                {% include 'icon-add_to_cart-plus' %}
+              </button>
+            </div>
+            {% else %}
+            <input type="hidden" id="Quantity-{{ section.id }}" name="quantity" value="1" min="1" pattern="[0-9]*" class="product-form__input product-form__input--quantity" data-available_variant="{% if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' %}{{ current_variant.inventory_quantity }}{% else %}countinue{% endif %}">
+            {% endif %}
+            {% assign pre_order = false %}
+            <div class="actions-add-to-cart {% if product.tags contains 'get_free_one_for_all' %}open_custom-popup_cl {% endif %}">
+              {%- capture button_text -%}
+              {%- if current_variant -%}
+              {%- if current_variant.available -%}
+                
+              {% comment %} TEST: replace current_variant.inventory_quantity <= 0 to current_variant.inventory_quantity == 0 {% endcomment %}
+              {%- if current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'continue' and current_variant.inventory_quantity == 0 -%}
+              {{ 'products.product.pre_order' | t }}
+              {%- assign pre_order = true -%}
+              {%- else -%}
+              {{ 'products.product.add_to_cart' | t }}
+              {%- endif -%}
+              {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+              {%- else -%}
+              {{ 'products.product.unavailable' | t }}
+              {%- endif -%}
+              {%- endcapture -%}
+              <button type="button" id="add" type="submit" {% if current_variant.available and pre_order %}class="is_pre_order"{% endif %} {% if current_variant %}{% unless current_variant.available %}class="disabled" disabled="disabled"{% endunless %}{% else %}class="disabled" disabled="disabled"{% endif %} title="{{ button_text }}">
+                <span class="add_to_cart_text">{{ button_text }}</span>
+              </button>
+            </div>
+          </div>
+            <!-- Beginning of Buy With Prime Widget -->
+                     <style>
+             .bwp-widget-and-separator-container {
+
+                    display: flex;
+
+                    flex-direction: column-reverse;
+
+                width:288px;
+
+               }
+
+           
+
+                .or-separator {
+
+                    text-align: center;
+
+                    display: none;
+
+               }
+
+           
+
+               .bwp-widget-loaded ~ .or-separator {
+
+                  display: flex;
+
+                  align-items: center;
+
+                  text-align: center;
+
+                  margin-top:16px;
+
+               }
+
+               .bwp-widget-loaded ~ .or-separator::before {
+
+                  margin-right:.5em;
+
+              }
+
+              .bwp-widget-loaded ~ .or-separator::after {
+
+                  margin-left:.5em;
+
+              }
+
+              .bwp-widget-loaded ~ .or-separator::after, .bwp-widget-loaded ~ .or-separator::before {
+
+                  content: "";
+
+                  border-bottom: 1px solid black;
+
+                  flex: 1;
+
+            }
+            </style>
+          <div class="bwp-widget-and-separator-container"> 
+                    <script async fetchpriority='high' src='https://code.buywithprime.amazon.com/bwp.v1.js'></script>
+                    {% if product.sku %}
+                        <div
+                            id="amzn-buy-now"
+                            data-site-id="xs9ahi99ff"
+                            data-widget-id="w-V4yNDLjE7h9R7cnUp4lYa3"
+                            data-sku="{{product.sku}}"
+                        ></div>
+                    {% else %}
+                        <div
+                            id="amzn-buy-now"
+                            data-site-id="xs9ahi99ff"
+                            data-widget-id="w-V4yNDLjE7h9R7cnUp4lYa3"
+                            data-sku="{{product.selected_or_first_available_variant.sku}}"
+                        ></div>
+                    {% endif %}
+        <span class="or-separator">OR</span>
+    </div>
+          <!-- End of Buy With Prime Widget -->
+          
+          {% include 'tags_gird' %}
+          <div class="custom_apple_cl">
+        <div id="gsAppContainer" class="gs__app-container"></div>
+        </div>
+          {% endform %}
+
+
+        </div>
+        
+        
+        {% if section.settings.freeship_text != blank %}
+        <div style="margin-bottom: 0; padding-bottom: 0" class="free-shipping">
+          {{ section.settings.freeship_text }}
+        </div>
+        {% endif %}
+
+        {% for tag in product.tags %}
+          {% if tag contains 'aera-notice' %}
+            <div style="font-size: 14px;">Your order will be shipped separately for Aera products as they come directly from the manufacturer. If your order includes both AGRARIA and Aera products, you will receive two separate shipments. Aera products not available for express shipping.</div>
+        {% break %} 
+        {% endif %}
+        {% endfor %}
+        
+        {% if product.description != blank %}
+        {% assign shop_domain = shop.domain %}
+        <div class="product-attribute-overview">
+          {% if product.description contains '<!--bottom_desription-->' %}
+          	{% capture top_content %}
+          		{{ product.description | split : '<!--bottom_desription-->' | first | replace : 'www.agrariahome.com' , shop_domain  }}
+          	{% endcapture %}
+          	{% capture bottom_content %}
+          		{{ product.description | split : '<!--bottom_desription-->' | last  | replace : 'www.agrariahome.com' , shop_domain  }}
+          	{% endcapture %}
+          {{ top_content }}
+          {% else %}
+          	{{ product.description }}
+          {% endif %}
+        </div>
+        {% endif %}
+
+
+        {% if product.tags contains 'aera-notice-sub' %}
+          <div class="aero-notice">
+              At a mid-strength setting (5 on Aera and 3 on Aera Mini) playing 10 hours a day, on average, capsules last approximately 60 days. Fragrances may vary and days may vary based on how many hours they are scheduled to play each day. The best way to conserve fragrance and make capsules last is to make sure your Aera or Aera Mini is connected and scheduled to turn off when you are away at work or at night when you are asleep.
+          </div>
+        {% endif %}
+
+        <div class="product-social-links">
+          <!-- Swym button on product pages -->
+          {% comment %}
+          <div class="swym-dummy">
+            <span class="swym-button"></span>
+          </div>
+          {% endcomment %}
+          <div class="swym-wishlist-button-bar"></div>
+          <!-- Swym button on product pages -->
+          {% if section.settings.show_share_buttons %}
+          {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product.featured_media %}
+          {% endif %}
+        </div>
+        <div class="bundle">
+        	{%- render 'shappify-bdl-load-bundle' -%}
+        </div>
+        
+        {% if bottom_content != blank %}
+          <div class="product-info-detailed">
+            <h3>{{ 'products.product.details' | t }}</h3>
+            {{ bottom_content }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-attribute-overview .list {
+    list-style: inside;
+    margin-left: 20px;
+  }
+</style>
+
+{% if bold_variants_size > 1 %}
+<script>
+  var mf = "{{ shop.money_format }}";
+  var inv_qty = [];
+  var inv_policy = [];
+  {% for variant in product.variants %}
+{%- include 'bold-variant' with variant, hide_action: 'skip' -%}
+  inv_qty[{{ variant.id }}] = '{{variant.inventory_quantity }}';
+  inv_policy[{{ variant.id }}] = '{{variant.inventory_policy }}';
+  {% endfor %}
+  var selectCallback = function(variant, selector) {
+    var form = jQuery('#' + selector.domIdPrefix).closest('form');
+    $('.stock-available').removeClass('hidden');
+    $(form).find('#add').removeClass('is_pre_order');
+    if (variant) {
+      if (variant.available) {
+        if(inv_qty[variant.id]){
+          $(form).find('input[name="quantity"]').attr('data-available_variant',inv_qty[variant.id]);
+        }
+        // Selected a valid variant that is available.
+        if(inv_qty[variant.id] <= 0 && inv_policy[variant.id] == 'continue' && variant.inventory_management == 'shopify'){
+          $(form).find('#add').addClass('is_pre_order');
+          $(form).find('#add').removeClass('disabled').removeAttr('disabled').val(theme.strings.pre_order);
+          $(form).find('#add').attr('title',theme.strings.pre_order);
+          $(form).find('.add_to_cart_text').text(theme.strings.pre_order);
+        }else{
+          $(form).find('#add').removeClass('disabled').removeAttr('disabled').val(theme.strings.addToCart);
+          $(form).find('#add').attr('title',theme.strings.addToCart);
+          $(form).find('.add_to_cart_text').text(theme.strings.addToCart);
+        }
+        $('.stock-available .svg_stock.outofstock').addClass('hidden');
+        $('.stock-available .svg_stock.available').removeClass('hidden');
+        $('.stock-available .stock_detail').html(theme.strings.in_stock);
+      } else {
+        // Variant is sold out.
+        $(form).find('#add').val(theme.strings.soldOut).addClass('disabled').attr('disabled', 'disabled');
+        $(form).find('#add').attr('title',theme.strings.soldOut);
+        $(form).find('.add_to_cart_text').text(theme.strings.soldOut);
+        $('.stock-available .svg_stock.outofstock').removeClass('hidden');
+        $('.stock-available .svg_stock.available').addClass('hidden');
+        $('.stock-available .stock_detail').html(theme.strings.out_of_stock);
+      }
+      // Whether the variant is in stock or not, we can update the price and compare at price.
+      if ( variant.compare_at_price > variant.price ) {
+        $('.price_div').html('<span class="money">' + Shopify.formatMoney(variant.price, mf) +'</span><del><span class="money">'+Shopify.formatMoney(variant.compare_at_price, mf)+ '</span></del>');
+        $('.price_div').addClass('is_compare');
+      } else {
+        $('.price_div').html('<span class="money">' + Shopify.formatMoney(variant.price, mf)+'</span>');
+        $('.price_div').removeClass('is_compare');
+      }
+      if(variant.sku != ''){
+        $('.for_sku').removeClass('hidden');
+        $('.for_sku').find('.sku-value').html(variant.sku);
+      }else{
+        $('.for_sku').addClass('hidden');
+      }
+      if($('.product-img-thumb').hasClass('slick-initialized') && variant.featured_media != null){
+        if($('.product-img-thumb .product-img-thumb-item[data-media_id='+ variant.featured_media.id +']').length){
+          $('.product-img-thumb .product-img-thumb-item[data-media_id='+ variant.featured_media.id +']').trigger('click');
+        }
+      }
+    } else {
+      // variant doesn't exist.
+      $(form).find('#add').val(theme.strings.unavailable).addClass('disabled').attr('disabled', 'disabled');
+      $(form).find('#add').attr('title',theme.strings.unavailable);
+      $(form).find('.add_to_cart_text').text(theme.strings.unavailable);
+      $('.for_sku').removeClass('hidden');
+      $('.stock-available').addClass('hidden');
+    }
+  }
+  // initialize multi selector for product
+  jQuery(function($) {
+    new Shopify.OptionSelectors("ProductSelect-{{ section.id }}", { product:  {%- include 'bold-product', output: 'json' -%} , onVariantSelected: selectCallback, enableHistoryState: true });
+  });
+</script>
+{% endif %}
+<script type="text/javascript">
+  var mzOptions = {
+    'zoomWidth':'auto',
+    'zoomHeight':'auto',
+    'zoomPosition':'inner',
+    'zoomDistance':15,
+    'transitionEffect':false,
+    'lazyZoom':false,
+    'rightClick':false,
+    'zoomMode':'off',
+    'zoomOn':'hover',
+    'upscale':true,
+    'smoothing':true,
+    'variableZoom':false,
+    'zoomCaption':'off',
+    'expand':'window',
+    'cssClass':'dark-bg',
+    'expandZoomMode':'zoom',
+    'selectorTrigger':'click',
+    'expandZoomOn':'click',
+    'expandCaption':true,
+    'closeOnClickOutside':true,
+    'hint':'once',
+    'textHoverZoomHint':'Hover to zoom',
+    'textClickZoomHint':'Click to zoom',
+    'textExpandHint':'Click to expand',
+    'textBtnClose':'Close',
+    'textBtnNext':'Next',
+    'textBtnPrev':'Previous' 
+  }
+  var mzMobileOptions = {
+    'zoomMode':'off',
+    'expand':'window',
+    'lazyZoom':false
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "Product",
+    "settings": [
+		{
+          "type": "checkbox",
+          "id": "show_quantity_selector",
+          "label": "Show quantity selector",
+          "default": true
+        },
+		{
+          "type": "richtext",
+          "id": "freeship_text",
+          "label": "Freeshipping Text"
+        },
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "Show social sharing buttons",
+      "default": true
+    }
+	]
+  }
+{% endschema %}

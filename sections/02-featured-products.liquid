@@ -1,0 +1,75 @@
+{% assign collection = collections[section.settings.collection] %}
+{% if collection.products != blank %}
+<section class="top-products-wrapper {% if section.settings.no_line %} no_line{% endif %} {% if section.settings.show_hide %} hidden{% endif %}">
+  <div class="min-container">
+    {% if section.settings.title != blank %}
+    <div class="section-title">
+      <h3>{{ section.settings.title }}</h3>
+    </div>
+    {% else %}
+    <div class="section-title">
+      <h3>{{ collection.title }}</h3>
+    </div>
+    {% endif %}
+    <div class="product-slider">
+      {% for product in collection.products limit:section.settings.limit %}
+      {% include 'product-gird-item' %}
+      {% endfor %}
+      {% assign collection_new = collections[section.settings.collection_new] %}
+      {% if collection_new.products != blank %}
+      {% for product in collection_new.products limit:section.settings.limit %}
+      {% include 'product-gird-item' %}
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Featured Products",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_hide",
+        "label": "Hide this"		
+      },
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"checkbox",
+        "id":"no_line",
+        "label":"Remove Title line"
+      },
+      {
+        "type":"collection",
+        "id":"collection",
+        "label":"Collection"
+      },
+      {
+        "type":"collection",
+        "id":"collection_new",
+        "label":"Collection 2"
+      },
+      {
+          "type":      "range",
+          "id":        "limit",
+          "min":       5,
+          "max":        12,
+          "step":       1,
+          "label":     "Limit",
+          "default":   8
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

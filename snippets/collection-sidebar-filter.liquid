@@ -1,0 +1,115 @@
+{% assign col_list = false %}
+{% assign tag_filter = false %}
+{% capture tagfilter %}
+  {% for block in section.blocks %}
+    {% if block.settings.show_filter %}
+      {% if block.type == 'filter' %}
+      {% assign tag_filter = true %}
+	  {% assign has_cur_tag = false %}
+      {% assign tags = block.settings.filter_by | downcase  | replace: ' ,', ',' | replace: ', ', ',' | split: ',' %}
+      {% assign colAll = collection.all_tags | downcase %}
+
+      <script>console.log('colAll',{{ colAll | json }})</script>
+      <script>console.log('tags',{{ tags | json }})</script>
+      {% assign tagCount = 0 %}{% for tag in tags %}{% if current_tags contains tag %}{% assign has_cur_tag = true %}{% endif %}{% if colAll contains tag %}{% assign tagCount = tagCount | plus: 1 %}{% endif %}{% endfor %}
+	   {% unless has_cur_tag %}
+		{% if tagCount > 0 %}
+        <li class="expand-layered-nav 123" data-item="{{ block.settings.filter_by_title | handle }}_{{ forloop.index }}" {% if tagCount == 0 %}{% assign tag_filter = false %}style="display:none;"{% endif %}>
+          {% assign fn = block.settings.filter_by_title %}
+          <div  class="toggle_filter">{{ fn }}</div>
+          <div class="expand toggle_filter"></div>
+          <ul class="filtersList scrollbar-inner {% if fn contains 'Color'%} colorList {% endif %} ">
+            {% for tag in tags %}
+              {% if current_tags contains tag %}
+                <li data-group="{{ fn }}" data-handle="{{ tag | handle }}" class="advanceFiler current {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | downcase }} filterTagActive">
+                  {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | link_to_remove_tag: tag }}
+                </li>
+              {% elsif colAll contains tag %}
+                <li data-group="{{ fn }}" data-handle="{{ tag | handle }}" class="advanceFiler {{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | downcase }}">{{ tag | remove: 'cf-size-' | remove: 'COLOR_' | remove: 'PRICE_' | replace: '_',' ' | link_to_add_tag: tag }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+		{% endif %}
+	   {% endunless %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% assign menu_collection = linklists[collection.handle].links %}
+{% assign list_all = linklists[collection.handle] %}
+{% if menu_collection == blank %}
+	{% assign menu_collection = linklists[section.settings.link_list].links %}
+	{% assign list_all = linklists[section.settings.link_list] %}
+{% endif %}
+{% if menu_collection != blank and section.settings.show_filter %}
+<style>
+	.sidebar-hidden {
+			display: none;
+	}
+</style>
+<div class="customized-sidebar-categories ">
+  <h3 class="sidebar-title">{{ list_all.title }}<div class="expand toggle_filter"></div></h3>
+  <ul class="categories-fst">
+    {% for link in menu_collection %}
+    <li class="{% if link.active %} is_active{% endif %} {% if link.links != blank %}expand-layered-nav{% endif %}">
+
+      {% if link.links != blank  %}
+        
+        {% if link.title == 'Monique Lhuillier' %}
+          <a href="{{ link.url }}">{{ link.title }} </a>
+        {% else %}
+            <div class="toggle_filter">{{ link.title }}</div>
+        {% endif %}
+       
+      {% else %}
+      <a href="{{ link.url }}">{{ link.title }} </a>
+      {% endif %}
+      {% if link.links != blank %}
+      <div class="expand toggle_filter"></div>
+      <ul class="filtersList scrollbar-inner">
+        {% for child in link.links %}
+        <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+
+{% if current_tags != blank %}
+<div class="block-content filter-content">
+  <div class="filter-current">
+    <strong class="block-subtitle filter-current-subtitle" role="heading" aria-level="2" data-count="2">{{ 'collections.general.clear_all_title' | t }}</strong>
+    <ul class="items">
+      {% for cur_tag in current_tags %}
+      {% include 'get_current_tag' , cur_tag : cur_tag %}
+      {% endfor %}
+    </ul>
+  </div>
+  {%- capture collection_clear_filter -%}{% if has24 %}{% unless is_list %}?view=24{% else %}?view=list24{% endunless %}{% elsif has48 %}{% unless is_list %}?view=48{% else %}?view=list48{% endunless %}{% elsif hasall %}{% unless is_list %}?view=24{% else %}?view=listall{% endunless %}{% endif %}{%- endcapture -%}
+  <div class="block-actions filter-actions">
+    <a class="remeveAll button" href="{{ collection.url }}{{ collection_clear_filter }}">{{ 'collections.general.clear_all' | t }}</a>
+  </div>
+</div>
+{% endif %}
+
+{% if tagfilter != blank %}
+<div class="customized-sidebar-categories tags_linked">
+  <h3 class="sidebar-title">{{ 'collections.filters.title_tags' | t }}<div class="expand toggle_filter"></div></h3>
+  <ul class="categories-fst">
+    {{ tagfilter }}
+  </ul>
+</div>
+{% endif %}
+
+<style>
+  .advanceFiler {
+    text-transform: capitalize;
+  }
+</style>
+

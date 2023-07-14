@@ -1,0 +1,25 @@
+{% paginate collection.products by 1000 %} {% for product in collection.products %}
+ <div class="bold-bundle" data-product-id="{{ product.id }}"&gt ></div>
+{% endfor %}{% endpaginate %}
+<style>
+ .bold-bundle{
+ display:inherit; 
+ }
+ .bold-bundles-widget{
+ margin: 5px; 
+ margin-left: 20%;
+ margin-right: 20%;
+ }
+ @media only screen and (min-width: 651px) { 
+ .bold-bundles-widget-item.bold-bundles-widget-item--product {
+ max-width: 20% !important;
+ }
+ }
+ .bold-bundles-widget__footer{
+ display: flex;
+ justify-content: center;
+ } 
+ .bold-bundles-widget-item__info {
+ text-align: center;
+ }
+</style>

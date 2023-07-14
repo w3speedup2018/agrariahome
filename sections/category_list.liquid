@@ -1,0 +1,32 @@
+{% include 'collection_list_common' %}
+
+{% schema %}
+  {
+    "name": "All Category",
+    "settings": [
+      {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Banner Image"
+      },
+      {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color"
+      }
+    ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "label": "Collection",
+          "id": "collection",
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+  }
+{% endschema %}

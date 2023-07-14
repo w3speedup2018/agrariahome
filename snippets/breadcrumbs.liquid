@@ -1,0 +1,70 @@
+{%- assign t = template | split: '.' | first -%}
+<div class="breadcrumbs min-container">
+  <ul>
+    {% unless template contains 'page' %}
+    <li>
+      <a href="/"><span>Home &nbsp;>&nbsp; </span></a>
+    </li>
+    {% endunless %}
+    {%- case t -%}
+      {%- when 'page' -%}
+        <li>
+          <span>{{ page.title }}</span>
+        </li>
+      {%- when 'product' -%}
+        {%- if collection.url -%}
+          <li>
+            <span>{{ collection.title | link_to: collection.url }} &nbsp;>&nbsp; </span>
+          </li>
+        {%- endif -%}
+        <li>
+          <span>{{ product.title | truncate: 50 }}</span>
+        </li>
+      {%- when 'collection' and collection.handle -%}
+        {%- if current_tags -%}
+          <li>
+            <span>{{ collection.title | link_to: collection.url }} &nbsp;>&nbsp;</span>
+          </li>
+          <li>
+            {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+            {{ current_tags | join: " + "}}
+          </li>
+        {%- else -%}
+        {% if collection.handle == 'extra-savings'  %}
+          <li>
+            <span>Holiday Collection</span>
+          </li>
+          {% else %}
+          <li>
+            <span>{{ collection.title }}</span>
+          </li>
+        {% endif %}
+        {%- endif -%}
+      {%- when 'blog' -%}
+        {%- if current_tags -%}
+          <li>
+            <span>{{ blog.title | link_to: blog.url }} &nbsp;>&nbsp;</span>
+          </li>
+          <li>
+            {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+            {{ current_tags | join: " + " }}
+          </li>
+        {%- else -%}
+          <li>
+            <span>{{ blog.title }}</span>
+          </li>
+        {%- endif -%}
+      {%- when 'article' -%}
+        <li>
+          <span>{{ blog.title | link_to: blog.url }} &nbsp;>&nbsp;</span>
+        </li>
+        <li>
+          <span>{{ article.title }}</span>
+        </li>
+      {%- else -%}
+        <li>
+          <span>{{ page_title }}</span>
+        </li>
+    {%- endcase -%}
+  </ul>
+</div>

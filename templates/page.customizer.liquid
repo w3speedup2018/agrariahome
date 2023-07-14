@@ -1,0 +1,463 @@
+{{ 'customizer.scss.css' | asset_url | stylesheet_tag }}
+{{ 'magiczoomplus.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'magiczoomplus.js' | asset_url }}" defer="defer"></script>
+
+{% include 'breadcrumbs' %}
+
+{% assign collectionBundle = collections['bundle-collection'] %}
+
+<div class="normal_page">
+  <div class="min-container customizer-page">
+    <div class="row">
+      <!-- CUSTOMIZER -->
+      <div class="col-12 col-md-5 customizer_image text-center">
+        <div id="customizer_image">
+<!--    {{ 'default-test.jpg' | file_url }} -->
+          <a id="customizer_image__magicZoom" class="MagicZoom"  href="//cdn.shopify.com/s/files/1/0478/6336/5782/files/AirEssence_2000x2000_BOTTLE.jpg">
+            <img src="//cdn.shopify.com/s/files/1/0478/6336/5782/files/AirEssence_500x600_BOTTLE.jpg" class="customizer_image-img">
+          </a>
+        </div>
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="section-header text-center pt-2 pb-0">
+          <h5 class="section-header__sub-heading text-left mb-1">Create Your Own</h5>
+          <h4 class="section-header__heading text-left">{{ page.title }}</h4>
+          {{ page.content }}
+          <p><span class="section-header__bold">MAKE YOUR SELECTION</span> Detail on how items will be packaed can be noted here.</p>
+        </div>
+        <div class="customizer-options">
+          <div class="customizer-options_mobile-menu">
+            <span class="customizer-options_mobile-close">{% include 'icon-down-arrow' %}</span>
+            <h2 class="customizer-option_mobile-title disable_button" data-open=".customizer-options_bottles">Vessel</h2>
+            <h2 class="customizer-option_mobile-title" data-open=".customizer-options_oils">Fragrance</h2>
+            <h2 class="customizer-option_mobile-title" data-open=".customizer-options_diffusers" style="opacity: 0.2; pointer-events: none;">Diffuse with</h2>
+          </div>
+          <!-- Bottles -->
+          <div class="customizer-option customizer-options_bottles">
+            {% assign bottles = page.metafields.customizer_options.bottle %}
+            <h2 class="customizer-option_title active">Vessel</h2>
+            <div class="customizer-options_wrapper">
+              <div class="customizer-options_list">
+              {% for bottle in bottles %}
+              <label class="customizer-option_label" for="{{bottle.value}}">
+                <img class="customizer-option-icon" src="{{bottle.icon}}" />
+                <input class="customizer-option-radio" type="radio" id="{{bottle.value}}" name="options_bottle" value="{{bottle.value}}">
+                <span class="customizer-option-name">{{bottle.name}}</span>
+              </label>
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- end bottles -->
+          <!-- Oils -->
+          <div class="customizer-option customizer-options_oils">
+            {% assign oils = page.metafields.customizer_options.oil %}
+            <h2 class="customizer-option_title">Fragrance</h2>
+            <div class="customizer-options_wrapper closed">
+              <div class="customizer-options_list">
+              {% for oil in oils %}
+              <label class="customizer-option_label" for="{{oil.value}}">
+                <img class="customizer-option-icon" src="{{oil.icon}}" />
+                <input class="customizer-option-radio" type="radio" id="{{oil.value}}" name="options_oil" value="{{oil.value}}">
+                <span class="customizer-option-name">{{oil.name}}</span>
+              </label>
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- end oils -->
+          <!-- Diffuser -->
+          <div class="customizer-option customizer-options_diffusers" style="opacity: 0.2; pointer-events: none;">
+            {% assign diffusers = page.metafields.customizer_options.diffuser %}
+            <h2 class="customizer-option_title">Diffuse with</h2>
+            <div class="customizer-options_wrapper closed">
+              <div class="customizer-options_list">
+              {% for diffuser in diffusers %}
+              <label class="customizer-option_label" for="{{diffuser.value}}" data-bottle="{{diffuser.bottle}}">
+                <img class="customizer-option-icon" src="{{diffuser.icon}}" />
+                <input class="customizer-option-radio" type="radio" id="{{diffuser.value}}" name="{{diffuser.bottle}}" value="{{diffuser.value}}">
+                <span class="customizer-option-name">{{diffuser.name}}</span>
+              </label>
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- end diffuser -->
+          <div id="add_bundle" class="product-inner-wrapper" style="opacity: 0.2; pointer-events: none;">
+            <div class="Product-details-wrapper add_bundle-input">
+              <div class="product-add-form">
+                <div class="field-qty add_bundle-input">
+                  <button type="button" class="reduced qty_change">
+                    {% include 'icon-add_to_cart-minus' %}
+                  </button>
+                  <input type="number" id="quantity_bundle"
+                         name="quantity" value="1" min="1" pattern="[0-9]*"
+                         class="product-form__input product-form__input--quantity">
+                  <button type="button" class="increase qty_change">
+                    {% include 'icon-add_to_cart-plus' %}
+                  </button>
+                </div>
+                <div id="add-to-cart_buttons" class="actions-add-to-cart">
+  <!--                 class="disabled" disabled="disabled" -->
+                  <button type="button" id="add_bundle-submit" >
+                    <span class="add_to_cart_text">Add to bag</span><div id="customizer_price" style="display:none"></div>
+                  </button>
+                </div>
+              </div>
+              <div class="alert_note"></div>
+            </div>
+          </div>
+    	</div>
+      </div>
+      <!-- end CUSTOMIZER -->
+    </div>
+  </div>
+</div>	
+
+{% comment %}
+<div class="page-width">
+  <div class="grid">
+    <div class="grid__item medium-up--five-sixths medium-up--push-one-twelfth">
+      <div class="section-header text-center">
+        <h1>{{ page.title }}</h1>
+      </div>
+      <div class="rte">
+        {% if page.title == "Tickets" %}
+        {% if customer %}
+        <span id="customer-email" hidden>{{ customer.email }}</span>
+        {{ page.content }}
+        {% else %}
+        Please login to see Tickets
+        {% endif %}
+        {% else %}
+        {{ page.content }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endcomment %}
+
+
+
+<script>
+  var mzOptions = {
+    'zoomWidth':'auto',
+    'zoomHeight':'auto',
+    'zoomPosition':'inner',
+    'zoomDistance':15,
+    'transitionEffect':false,
+    'lazyZoom':false,
+    'rightClick':false,
+    'zoomMode':'off',
+    'zoomOn':'hover',
+    'upscale':true,
+    'smoothing':true,
+    'variableZoom':false,
+    'zoomCaption':'off',
+    'expand':'window',
+    'cssClass':'dark-bg',
+    'expandZoomMode':'zoom',
+    'selectorTrigger':'click',
+    'expandZoomOn':'click',
+    'expandCaption':true,
+    'closeOnClickOutside':true,
+    'hint':'always',
+    'textHoverZoomHint':'Hover to zoom',
+    'textClickZoomHint':'Click to zoom',
+    'textExpandHint':'Click to expand',
+    'textBtnClose':'Close',
+    'textBtnNext':'Next',
+    'textBtnPrev':'Previous' 
+  }
+  var mzMobileOptions = {
+    'zoomMode':'off',
+    'expand':'window',
+    'lazyZoom':false
+  }
+  
+  
+  let prices = [];
+  let temp = {};
+  let data = {
+            items: [
+              {
+                "id": "",
+                "quantity": ""
+              }
+              ]
+            };
+  
+  function runHelpArray(){
+  	{% for product in collectionBundle.products %}
+  	{% for variant in product.variants %}  
+        temp = {};
+        temp["id"]= "{{ variant.id }}";
+        temp["price"]= "{{ variant.price | money }}";
+        temp["inventory"]= "{{ variant.inventory_quantity }}";
+        prices.push(temp);     			
+    {% endfor %}
+    {% endfor %}
+    //console.log(prices);
+  }
+  
+  runHelpArray();
+  
+let bundleJson = {{ page.metafields.customizer_options.bundle | json }};
+
+$(document).ready(function(){
+	//auto-select first bottle
+    $(".customizer-options .customizer-option_label").first().trigger("click");
+//     //auto-select first oil
+//     $(".customizer-options_oils .customizer-option_label").first().trigger("click");
+//     //auto-select other first diffuser
+//     let selected = $(".customizer-options_diffusers .customizer-option-radio:checked").attr("name");
+//     console.log(selected);
+//     $(".customizer-options_diffusers .customizer-option_label").each(function(){
+//       let check = $(this).data("bottle");
+//       let current = $("input", this).attr("name");
+//       if($(this).prev().data("bottle") != check && selected != current){
+//           $(this).addClass("active_option");
+//           $(".customizer-option-radio", this).attr("checked", true);
+//       }
+//     });
+    
+    getBundle(false);
+});
+
+function getBundle(fadeIT){
+  
+  if($(".customizer-options_diffusers").css("display")=="block"){
+    $(".customizer-options_diffusers").addClass("show");
+  }
+  
+  let bottle = $(".customizer-options_bottles .customizer-option-radio:checked").val();
+  let oil = $(".customizer-options_oils .customizer-option-radio:checked").val();
+  let diffuser = $('.customizer-options_diffusers .customizer-option-radio[name="'+bottle+'"]:checked').val();
+
+  //console.log("bottle: "+bottle+"; oil: "+oil+"; diffuser: "+diffuser + "  / "+ typeof(diffuser));
+
+  let src, src_small  = "";
+
+  bundleJson.find((bundle, i) => {
+    
+    if (bundle.bottle == bottle && bundle.oil == oil && bundle.diffuser == diffuser){
+      
+      $("#add_bundle").removeAttr("style");
+      
+      let img_big = bundle.image;
+      let img_small = (bundle.image).replace("2000x2000", "500x600");
+      src = "https://cdn.shopify.com/s/files/1/0478/6336/5782/files/"+img_big;
+      src_small = "https://cdn.shopify.com/s/files/1/0478/6336/5782/files/"+img_small;
+      let productId = bundle.product;
+      //console.log(productId);
+
+      let priceObject = prices.find(product => product.id == productId);
+      let price = priceObject.price;
+      let inventory = priceObject.inventory;
+
+      if(inventory == 0){
+        $("#add_bundle-submit").attr('disabled', 'disabled').addClass("disable_button").find(".add_to_cart_text").text('Out of Stock');
+        $(".add_bundle-input .qty_change").addClass("disable_button");
+      } else {
+        $("#add_bundle-submit").removeAttr('disabled').removeClass("disable_button").find(".add_to_cart_text").text('Add to bag');
+        $(".add_bundle-input .qty_change").removeClass("disable_button");
+      }
+
+      if(fadeIT == true){
+        setTimeout(()=>{
+          data["items"][0].id=productId;
+          $("#customizer_price").html(" - "+price);
+        },210);
+      } else if(fadeIT == false) {
+        data["items"][0].id=productId;
+        $("#customizer_price").show().html(" - "+price);
+      }
+      //console.log(data);
+      //console.log(price);
+
+      $("#quantity_bundle").val(1).attr("max",inventory);
+    
+    } else if(bundle.bottle == bottle && bundle.oil == oil && diffuser === undefined) {
+      
+      $("#add_bundle").css({
+        "opacity" : ".2",
+        "pointer-events" : "none"
+      });
+      $("#customizer_price").hide();
+      $(".customizer-options_diffusers, .customizer-option_mobile-title[data-open='.customizer-options_diffusers']").removeAttr("style");
+    
+      src_small = $(".customizer-options_oils .customizer-option-radio:checked").prev().attr("src");
+      
+      if(bottle == "air"){
+        src_small = src_small.replace("PetiteEssence", "AirEssence");
+		src = src_small.replace("500x600", "2000x2000");
+      }else if(bottle == "petite"){
+        src_small = src_small.replace("AirEssence", "PetiteEssence");
+		src = src_small.replace("500x600", "2000x2000");
+      }
+      //console.log(src_small);
+    } else if(bundle.bottle == bottle && oil === undefined && diffuser === undefined) {
+      $(".customizer-options_diffusers, #add_bundle, .customizer-option_mobile-title[data-open='.customizer-options_diffusers']").css({
+        "opacity" : ".2",
+        "pointer-events" : "none"
+      });
+      
+      src_small = $(".customizer-options_bottles .customizer-option-radio:checked").prev().attr("src");
+      src = src_small.replace("500x600", "2000x2000");
+      //console.log(src_small);
+    }
+  });
+  
+  if(fadeIT == true){
+    $("#customizer_image").fadeOut(200);
+    $("#customizer_price").fadeOut(200);
+    setTimeout(()=>{
+      MagicZoom.update("customizer_image__magicZoom",src,src_small);      
+//    $("#customizer_image .customizer_image-img").attr("src",src);
+//    $("#customizer_image .MagicZoom").attr("href",src);
+    },210);
+    setTimeout(()=>{
+      $("#customizer_image").fadeIn(200);
+      $("#customizer_price").fadeIn(200);
+    },600);
+  } else if(fadeIT == false) { 
+    MagicZoom.update("customizer_image__magicZoom",src,src_small);
+  }
+}
+
+function swapDiffusers(bottle){
+    $(".customizer-options_diffusers .customizer-option_label").each(function(){
+        //console.log($(this).data("bottle"));
+        if($(this).data("bottle") != bottle){
+            $(this).removeClass("show");
+            $(this).addClass("hide");
+        } else {
+            $(this).addClass("show");
+            $(this).removeClass("hide");
+        }
+    });
+}
+
+function swapFragrance(use,swap){
+  $(".customizer-options_oils .customizer-option_label").each(function(){
+    var src = $(".customizer-option-icon",this).attr("src");
+    var new_src = src.replace(use,swap);
+    $(".customizer-option-icon",this).attr("src",new_src);
+  });
+}
+
+//on vessel remove class
+$(".customizer-options_bottles .customizer-option_label").on("click", function(){
+  $(".customizer-options_diffusers").removeClass("show");
+});
+  
+//on click add and remove active class
+$(".customizer-options .customizer-option_label").on("click", function(){
+	let clicked = $(".customizer-option-radio", this).attr("name");
+	$(this).parent().find(".customizer-option_label").each(function(){
+    	if($(".customizer-option-radio", this).attr("name")==clicked){
+    		$(this).removeClass("active_option");
+        }
+    });
+	$(this).addClass("active_option");
+    
+    getBundle(false)
+});
+
+$(".customizer-options_bottles .customizer-option-radio").on("change", function(){
+	let bottle = $(this).val();
+    //console.log(bottle);
+    
+    if(bottle == "air") {
+    	swapDiffusers("air");
+        swapFragrance("PetiteEssence","AirEssence");
+    } else if(bottle == "petite") {
+    	swapDiffusers("petite");
+        swapFragrance("AirEssence","PetiteEssence");
+    }
+});
+  
+$("#add_bundle-submit").on("click",function(e){
+  e.preventDefault();
+  let qty = $("#quantity_bundle").val();
+  let btn = $(this);
+  
+  data["items"][0].quantity = qty;
+  //console.log(data);
+	
+  $('.alert_note').empty();
+  btn.attr('disabled', 'disabled');
+  btn.find(".add_to_cart_text").text('Adding...');
+  $.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    dataType: 'json',
+    error: function(jqXHR, textStatus, errorThrown){
+      btn.removeAttr('disabled');
+      $('.alert_note').html('<p class="error_msg"><span class="svg"><?xml version="1.0" encoding="iso-8859-1"?><svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 488.451 488.451" style="enable-background:new 0 0 488.451 488.451;" xml:space="preserve"><g><path d="M484.125,412.013l-212.2-367.6c-12.3-21.3-43.1-21.3-55.4,0l-212.2,367.6c-12.3,21.3,3.1,48,27.7,48h424.4C481.025,460.013,496.425,433.313,484.125,412.013z M244.525,157.613c13.6,0,24.6,11.3,24.2,24.9l-4,139.6c-0.3,11-9.3,19.7-20.3,19.7s-20-8.8-20.3-19.7l-3.9-139.6C219.925,168.913,230.825,157.613,244.525,157.613zM244.225,410.113c-13.9,0-25.2-11.3-25.2-25.2c0-13.9,11.3-25.2,25.2-25.2s25.2,11.3,25.2,25.2S258.125,410.113,244.225,410.113z"/></g></svg></span><span class="message">The requested qty exceeds the maximum qty allowed in shopping cart.</span></p>');
+    }
+  }).done(function(data) {
+    $.get( "/cart?view=mini", function( data ) {
+      $('#minicart_content').html(data);
+    });
+    btn.removeAttr('disabled');
+    $.getJSON('/cart.js', function(cart){
+      $('.cart_count').text(cart.item_count);
+      if(cart.item_count == 0){
+        $('.cart-page-wrapper').addClass('empty-message');
+      }else{
+        $('.cart-page-wrapper').removeClass('empty-message');
+      };
+    });
+    btn.find(".add_to_cart_text").text('Add to bag');
+    $("#quantity_bundle").val(1);
+    runHelpArray();
+    getBundle();
+    $('.alert_note').html('<p class="success_msg"><span class="svg"><svg viewBox="0 -46 417.81333 417"><path d="m159.988281 318.582031c-3.988281 4.011719-9.429687 6.25-15.082031 6.25s-11.09375-2.238281-15.082031-6.25l-120.449219-120.46875c-12.5-12.5-12.5-32.769531 0-45.246093l15.082031-15.085938c12.503907-12.5 32.75-12.5 45.25 0l75.199219 75.203125 203.199219-203.203125c12.503906-12.5 32.769531-12.5 45.25 0l15.082031 15.085938c12.5 12.5 12.5 32.765624 0 45.246093zm0 0"></path></svg></span><span class="message">You successfully added product to your <a href="/cart">shopping bag</a>.</span></p>');
+  });
+  setTimeout(function(){
+      //$(".header-cart .mini-cart").addClass("open-cart");
+      $('.alert_note .success_msg, .alert_note .error_msg').fadeOut(300);
+    },5000);
+});
+  
+  $("#add_bundle .qty_change.increase").on("click", function(){
+  	let current_qty = parseInt($("#quantity_bundle").val());
+    let max_qty = parseInt($("#quantity_bundle").attr("max"));
+    //console.log(current_qty + " | "+ max_qty)
+    if(current_qty >= max_qty-1) {
+    	$(".add_bundle-input .increase").addClass("disable_button");
+    }
+  })
+  
+  $("#add_bundle .qty_change.reduced").on("click", function(){
+    $(".add_bundle-input .increase").removeClass("disable_button");
+  });
+  
+  $(".customizer-option .customizer-option_title").on("click", function(){
+  	$(this).parent().find(".customizer-options_wrapper").slideToggle();
+    $(this).toggleClass("active");
+  })
+  
+  //MOBILE
+  $(".customizer-options_mobile-menu .customizer-option_mobile-title").on("click", function(){
+  	$(".customizer-options .customizer-option").slideUp(200);
+    $(".customizer-options_mobile-menu .customizer-options_mobile-close").fadeIn(200);
+    //$(".customizer-options_mobile-menu").css("justify-content","center");
+    let selected = $(this).data("open");
+    if($(this).hasClass("disable_button") == false){
+    	$(".customizer-options_mobile-menu .customizer-option_mobile-title").removeClass("disable_button");
+    	$(this).addClass("disable_button");
+    }
+    $(selected).slideDown(200);
+  });
+  
+  $(".customizer-options_mobile-menu .customizer-options_mobile-close").on("click", function(){
+  	$(this).fadeOut(200);
+    $(".customizer-options .customizer-option").slideUp(200);
+    $(".customizer-options_mobile-menu .customizer-option_mobile-title").removeClass("disable_button");
+  });
+</script>

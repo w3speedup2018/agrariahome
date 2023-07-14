@@ -1,0 +1,292 @@
+{% if cart.item_count != 0 %}
+<div class="item-count-price">
+  <div class="items-total">
+    <span class="count">{{ cart.item_count }}</span>
+    <span>{{ 'cart.general.header_title' | t }}</span>
+  </div>
+  <div class="js-cart-total subtotal {% if cart.cart_level_discount_applications.size == 0 %} not_discount{% endif %}">
+    {%- assign cartDiscounts = '' -%}
+    {%- if cart.cart_level_discount_applications.size > 0 -%}
+    {%- assign cartDiscounts = cart.cart_level_discount_applications -%}
+    {%- endif -%}
+    <div{% if cart.cart_level_discount_applications.size == 0 %} class="hidden"{% endif %}>
+      <div class="order-discount-card-wrapper">
+        {%- for discount_application in cartDiscounts -%}
+        <span class="order-discount order-discount--title order-discount--cart">
+          {% include 'icon-saletag' %}<span>{{- discount_application.title -}}</span>
+        </span>
+        <span class="order-discount order-discount--cart order-discount--cart-total">
+          -<span>{{ discount_application.total_allocated_amount | money }}</span>
+        </span>
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="subtotal-prices">
+      <span class="label">
+        {% if cart.cart_level_discount_applications.size == 0 %} {% endif %}{{ 'cart.general.subtotal' | t }}
+      </span>
+      <span class="price-container csapps-cart-original-total">{{ cart.total_price | money_with_currency }}</span>
+    </div>
+  </div>
+</div>
+{% comment %}
+<div class="actions-btn">
+  <button type="submit" name="checkout" class="btn-red">{{ 'cart.general.checkout' | t }}</button>
+</div>{% endcomment %}
+<div class="viewcart-btn">
+  <a href="{{ routes.cart_url }}">{{ 'cart.general.go_to_cart' | t }}</a>
+</div>
+<div class="minicart-items-wrapper">
+  <ul class="minicart-items">
+    
+    {% assign freeProudcts = "" %}
+<!-- 36913623236758,36913624678550,36913391632534,36913427972246 -->
+    
+        {%- assign onlyOfferProduct = true -%}
+
+            {% for productId in cart.items %}
+
+               {% if freeProudcts contains productId.id %}
+
+               {% else %}
+
+                  {%- assign onlyOfferProduct = false -%}
+
+              {% endif %}
+
+            {% endfor %}        
+
+        	
+            {% if onlyOfferProduct == true %}
+				
+        	<script>
+
+                $(function() {
+                    $.ajax({
+                      type: "POST",
+                      url: '/cart/clear.js',
+                      success: function(){
+							window.location.href = window.location.href;
+                      },
+                      dataType: 'json'
+                    });
+                });              
+              
+        	</script>
+
+          {% endif %}
+   
+    
+    {% if onlyOfferProduct == false %}
+    {% for item in cart.items %}
+    {% assign promotion = 0 %}
+    <li>
+      <div class="cm-cart-product cart_item_cust">
+        {% if freeProudcts contains item.id %}
+        <img src="{{ item | img_url: '110x' }}" alt="{{ item.alt | escape }}" width="90">
+        {% else %}
+        <a href="{{ item.url }}" class="product-item-photo">
+          <img src="{{ item | img_url: '110x' }}" alt="{{ item.alt | escape }}">
+        </a>
+        {% endif %}
+        <div class="product-item-details">
+          <div class="product-item-name">
+            {% if freeProudcts contains item.id %}
+              {{ item.product.title | escape | truncate: 25 }}
+            {% else %}
+              <a href="{{ item.url }}">{{ item.product.title | escape | truncate: 25 }}</a>
+            {% endif %}
+            <p>{{ item.vendor }}</p>
+            
+          </div>
+          <div class="product-item-pricing">
+            <div class="price-container">  
+              {%- assign hasDiscount = false -%}
+              {%- if item.original_price != item.final_price -%}
+              {%- assign hasDiscount = true -%}
+              {%- endif -%}
+
+                  {% if item.product.title contains 'Potpourri' %}
+              		{% if hasDiscount %}
+                        <div>
+                          <dd> 
+                            <s data-cart-item-original-price><div class="pn-price-item" data-id="{{ item.key }}">{{ item.original_price | money }}</div></s>
+                          </dd>
+                        <dt>
+                          <script>console.log({{item | json}});</script>
+                          <span class="hidden">{{ 'products.product.regular_price' | t }}</span>
+                        </dt>
+                        <dd data-cart-item-regular-price>
+                          <div class="pn-price-item red" data-id="{{ item.key }}"><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_price_2" data-item-key="{{item.key}}" style="display:none !important;"></span>{{ item.original_price | money }}
+                                       {% if item.original_price < item.variant.compare_at_price %}
+                          <strike>{{ item.variant.compare_at_price | money }}</strike> 
+                        {% endif %}
+                      </div>
+                        </dd>                      
+                        </div>  
+              		{% else %}
+              			<div>
+                          <script>console.log("ovde je uso")</script>
+                        <dt>
+                          <span class="hidden">{{ 'products.product.regular_price' | t }}</span>
+                        </dt>
+                        <dd data-cart-item-regular-price>
+                          <div class="pn-price-item" data-id="{{ item.key }}"><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_price_2" data-item-key="{{item.key}}" style="display:none !important;"></span>{{ item.original_price | money }}
+                                             {% if item.original_price < item.variant.compare_at_price %}
+                          <strike>{{ item.variant.compare_at_price | money }}</strike> 
+                        {% endif %}
+                          </div>
+                        </dd>                      
+                        </div>  
+              		{% endif %}
+                  {%- else -%}                  
+                                 
+                  <div {% unless hasDiscount %}class="hidden" {% endunless %} data-cart-item-discounted-price-group>
+                    <dt>
+                      <span class="hidden">{{ 'products.product.regular_price' | t }}</span>
+                    </dt>
+                    <dd> 
+                      <s data-cart-item-original-price><div class="pn-price-item" data-id="{{ item.key }}">{{ item.original_price | money }}</div></s>
+                    </dd>
+                    <dt>
+                      <span class="hidden">{{ 'products.product.sale_price' | t }}</span>
+                    </dt>
+                    <dd>
+                      <span class="order-discount" data-cart-item-final-price>{{ item.original_price | money }}</span>
+                    </dd>
+                  </div>
+              
+             
+                  <div {% if hasDiscount %}class="hidden" {% endif %}data-cart-item-regular-price-group>
+                    <dt>
+                      <span class="hidden">{{ 'products.product.regular_price' | t }}</span>
+                    </dt>
+                    <dd data-cart-item-regular-price>
+                      <div class="pn-price-item" data-id="{{ item.key }}"><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_price_2" data-item-key="{{item.key}}" style="display:none !important;"></span>{{ item.final_price | money }}
+                        {% if item.original_price < item.variant.compare_at_price %}
+                          <strike>{{ item.variant.compare_at_price | money }}</strike> 
+                        {% endif %}
+                    </div>
+                    </dd>
+                  </div>
+              {%- endif -%} 
+              
+              {%- assign itemDiscounts = '' -%}
+              {%- if item.line_level_discount_allocations != blank -%}
+              {%- assign itemDiscounts = item.line_level_discount_allocations -%}
+              {%- endif -%}
+
+              <ul class="order-discount order-discount--list order-discount--title order-discount--cart{% if item.line_level_discount_allocations == blank %} hidden{% endif %}">
+                {%- for discount_allocation in itemDiscounts -%}
+                <li class="order-discount__item">
+                  {% include 'icon-saletag' %}
+                  <span>
+                    {{- discount_allocation.discount_application.title -}}
+                  </span> (-<span>{{ discount_allocation.amount | money }}</span>)
+                </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+            {%- assign variant_options = '' -%}
+            {%- if item.product.has_only_default_variant != true -%}
+            {%- assign variant_options = item.options_with_values -%}
+            {%- endif -%}
+            <ul>
+              {% if variant_options != blank %}
+                {%- for option in variant_options -%}
+                <li class="item--property product-details__item--variant-option"><span class="product-details__item-label">{{ option.name }}:</span> <span>{{ option.value }}</span></li>
+                {%- endfor -%}
+              {% endif %}
+              
+              {%- assign property_size = item.properties | size -%}
+              
+              {%- if property_size > 0 -%}
+              {%- for p in item.properties -%}
+              {%- unless p.last == blank -%}
+              {% if p.first == '_Promotion' or p.first == '_buyItem' %}
+              {% assign promotion = 1 %}
+              {% continue %}
+              {% endif %}
+              <li class="item--property {{ p.last }}___" data-cart-item-property>
+                <span class="product-details__item-label">{{ p.first }}: </span>
+                <span>{%- if p.last contains '/uploads/' -%}<a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>{%- else -%}{{ p.last }}{%- endif -%}</span>
+              </li>
+              {%- endunless -%}
+              {%- endfor -%}
+              {%- endif -%}
+            </ul>
+          </div>
+          <div class="details-qty">
+            <label class="{% if freeProudcts contains item.id %} not_clickable_custom{% endif %}">
+              Qty:
+            </label>
+            <input type="number" size="2" min="1" name="updates[]" data-id="{{ item.key }}" data-cur_qty="{{ item.quantity }}" value="{{ item.quantity }}" class="tc item-quantity {% if freeProudcts contains item.id %} not_clickable_custom{% endif %}" data-available_variant="{% if item.variant.inventory_management == 'shopify' and item.variant.inventory_policy == 'deny' %}{{ item.variant.inventory_quantity }}{% else %}countinue{% endif %}"/>
+            <button class="update_minicart hidden">Update</button>
+            <div class="product-actions">
+              {% unless freeProudcts contains item.id %}
+              <a class="pr-action" href="{{ item.url }}">
+                {% include 'icon-edit' %}
+              </a>
+              {% endunless %}
+              <a class="pr-action remove_item" data-id="{{ item.key }}">
+                {% include 'icon-remove' %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  {% endif %}
+  </ul>
+</div>
+<div class="actions-btn">
+  <button type="submit" name="checkout" class="btn-red">{{ 'cart.general.checkout' | t }}</button>
+</div>
+{% comment %}
+<div class="viewcart-btn">
+  <a href="{{ routes.cart_url }}">{{ 'cart.general.go_to_cart' | t }}</a>
+</div>{%endcomment%}
+{% else %}
+<p class="emptyCart">{{ 'cart.general.empty' | t }}</p>
+{% endif %}
+
+
+<style>
+  .csapp_aiod_coupan {
+  	display: none;
+  }
+  .item-count-price {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .item-count-price .items-total {
+  	font-size: 14px;
+  }
+  .item-count-price .subtotal{
+    letter-spacing: 1.3px;
+  }
+  .item-count-price .discount-price{
+    color: #b5b5b5;
+    font-weight: 500;
+  }
+  .discount .dis-svg {
+  	display: none;
+  }
+  .csapp-discount-list .discount_price .csapp_money {
+    background: #df5d53;
+    color: #fff;
+    padding: 3px 6px 4px 15px;
+  }
+  .csapps-cart-total {
+    font-size: 18px;
+    color: #333333;
+  }
+  .csapps-cart-original-total.discount-price {
+    color: #c9c9c9;
+  }
+  .cart-page-wrapper .cart-form .footer-total-right .cart-total {
+    color: #333333;
+  }
+</style>

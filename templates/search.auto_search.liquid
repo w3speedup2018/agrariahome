@@ -1,0 +1,18 @@
+{% layout none %}
+{% assign count = 0 %}
+{% for item in search.results %}
+  {% assign hide_product = true %}
+  {% assign count = count | plus : 1 %}
+	{% for tag in item.tags %}	
+    	{% if tag == "hide_this_product" %}
+			{% assign hide_product = false %}
+		{% endif %}
+	{% endfor %}
+	{% if hide_product == true %}
+		{% include 'product-autosearch-gird-item', product: item %}	
+	{% endif %}
+	{% if count == 4 %}
+      <button class="view_all">View All</button>
+      {% break %}
+	{% endif %}
+{% endfor %}

@@ -1,0 +1,192 @@
+{% assign is_list = false %}
+{% if template contains '24' %}
+{% assign limit = 24 %}
+{% assign has24 =  true %}
+{% elsif template contains '48' %}
+{% assign limit = 48 %}
+{% assign has48 =  true %}
+{% elsif template contains 'all' %}
+{% assign limit = 1000 %}
+{% assign hasall =  true %}
+{% else %}
+{% assign limit = 18 %}
+{% assign has18 =  true %}
+{% endif %}
+{% if template contains 'list' %}
+{% assign is_list = true %}
+{% endif %}
+{% paginate search.results by limit %}
+{% assign current_pro = current_page | times: limit %}
+{% assign first = current_pro | minus: limit %}
+<section class="page-main-pal" data-section="collection-template">
+  <div class="min-container">
+    <div class="page-not-added">
+      {% if search.performed == false %}
+      <h2>{{ 'general.search.title' | t }}</h2>
+      {% else %}
+      <h2>
+        <span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>
+        {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+      </h2>
+      {% endif %}
+      {% if search.performed and search.results_count == 0 %}
+      <div class="rte search--no-results-found text-center">
+        <p>{{ 'general.search.no_results' | t }}</p>
+      </div>
+      {% endif %}
+      {% if search.performed == false %}
+      <div class="form-container">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form search-page-form">
+          <div class="form-group full-field">
+            <input type="text" name="q" placeholder="Search entire store here..." class="auto_search_input" value="{{ search.terms }}">
+            <input type="hidden" name="options[prefix]" value="last" aria-hidden="true" />
+            {% if settings.add_type != blank %}
+            <input type="hidden" name="type" value="{{ settings.add_type }}" aria-hidden="true" />
+            {% endif %}
+            <button type="submit">
+              {% include 'icon-search' %}
+            </button>
+          </div>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% if search.performed %}
+  <div class="min-container">
+    <div class="alocolumns">
+      <div class="sidebar-main is_search">
+        {% assign menu_collection = linklists[section.settings.menu].links %}
+        {% if menu_collection != blank %}
+        <div class="customized-sidebar-categories">
+          <h3 class="sidebar-title">{{ linklists[section.settings.menu].title }}<div class="expand toggle_filter"></div></h3>
+          <ul class="categories-fst">
+            {% for link in menu_collection %}
+            <li {% if link.links != blank %}class="expand-layered-nav"{% endif %}>
+              <a href="{{ link.url }}" class="">{{ link.title }}</a>
+              {% if link.links != blank %}
+              <div class="expand toggle_filter"></div>
+              <ul class="filtersList scrollbar-inner">
+                {% for child in link.links %}
+                <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+      <div class="collections-items">
+
+        <div class="toolbar-products">
+          {% capture toolbar_amount %}
+          <div class="toolbar-amount">
+            <p>
+              {% if paginate.items < limit %}
+              {% assign limit = paginate.items %}
+              <span class="toolbar-number imin">
+                {% if limit > 1 %}
+                {{ 'collections.general.items_with_counts' | t: count: limit }}
+                {% else %}
+                {{ 'collections.general.items_with_count' | t: count: limit }}
+                {% endif %}
+              </span>
+              {% else %}
+              {{ 'collections.general.item_text' | t }}
+              <span class="toolbar-number">
+                {{ first | plus: 1 }}
+              </span> -
+              <span class="toolbar-number">
+                {{ current_pro }}
+              </span> of
+              <span class="toolbar-number">{{ paginate.items }}</span>
+              {% endif %}
+            </p>
+          </div>
+          {% endcapture %}
+          {{ toolbar_amount }}
+          <div class="toolbar-sort-wrapper">
+            <div class="field-limiter">
+              <label>{{ 'collections.sorting.show' | t }}</label>
+              <select class="user_pagination">
+                <option {% if has18 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}{% if is_list %}&view=list{% endif %}">18</option>
+                <option {% if has24 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}24{% else %}list24{% endunless %}">24</option>
+                <option {% if has48 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}48{% else %}list48{% endunless %}">48</option>
+                <option {% if hasall %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}all{% else %}listall{% endunless %}">All</option>
+              </select>
+            </div>
+          </div>
+          <div class="cm-modes">
+            {%- capture get_cur_page -%}{% if has24 %}24{% elsif has48 %}48{% elsif hasall %}all{% endif %}{%- endcapture -%}
+            <a href="{{ request.path }}?type=product&q={{ search.terms | handleize }}{% if get_cur_page != blank %}&view={{ get_cur_page }}{% endif %}" {% unless is_list %}class="active-mode"{% endunless %}>
+              {% include 'icon-grid' %}
+            </a>
+            <a href="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view=list{% if get_cur_page != blank %}{{ get_cur_page }}{% endif %}" {% if is_list %}class="active-mode"{% endif %}>
+              {% include 'icon-list' %}
+            </a>
+          </div>
+        </div>
+
+        <div class="col-item-wrapper {% if is_list %} product-list-view{% endif %}">
+          {% for item in search.results %}
+		  {%- include 'bold-product' with item, hide_action: 'skip' -%}
+          {% if item.object_type == 'product' %}
+          {% assign hide_product = true %}
+            {% for tag in item.tags %}
+    			{% if tag == "hide_this_product" %}
+					{% assign hide_product = false %}
+				{% endif %}
+			{% endfor %}
+			{% if hide_product == true %}
+          <div class="col-item-inner">
+              {% if is_list %}
+              	{% include 'product-list-item', product: item  %}
+              {% else %}
+              	{% include 'product-gird-item', product: item  %}
+              {% endif %}
+
+          </div>
+
+			{% endif %}
+          {% endif %}
+          {% endfor %}
+        </div>
+        <div class="toolbar-products">
+          {{ toolbar_amount }}
+          <div class="toolbar-sort-wrapper">
+            <div class="field-limiter">
+              <label>{{ 'collections.sorting.show' | t }}</label>
+              <select class="user_pagination">
+                <option {% if has18 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}{% if is_list %}&view=list{% endif %}">18</option>
+                <option {% if has24 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}24{% else %}list24{% endunless %}">24</option>
+                <option {% if has48 %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}48{% else %}list48{% endunless %}">48</option>
+                <option {% if hasall %}selected="selected"{% endif %} value="{{ request.path }}?type=product&q={{ search.terms | handleize }}&view={% unless is_list %}all{% else %}listall{% endunless %}">All</option>
+              </select>
+            </div>
+          </div>
+          {%- if paginate.pages > 1 -%}
+          {% include 'pagination', paginate: paginate %}
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Menu"
+      }
+    ]
+  }
+{% endschema %}

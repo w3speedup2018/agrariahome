@@ -1,0 +1,217 @@
+{%- assign social_icons = false -%}
+{%- if
+  settings.social_twitter_link != blank
+  or settings.social_facebook_link != blank
+  or settings.social_pinterest_link != blank
+  or settings.social_instagram_link != blank
+  or settings.social_tumblr_link != blank
+  or settings.social_snapchat_link != blank
+  or settings.social_youtube_link != blank
+  or settings.social_vimeo_link != blank
+  or request.page_type == 'article'
+  or request.page_type == 'blog'
+-%}
+  {%- assign social_icons = true -%}
+{%- endif -%}
+<footer class="page-footer" data-section="footer">
+  <div class="min-container">
+    <div class="row">
+      {% if section.settings.logo != blank %}
+      <div class="footer-logo">
+        <a href="{{ routes.root_url }}">
+          <img src="{{ section.settings.logo | img_url:'225x' }}" alt="{{ section.settings.logo | escape }}">
+        </a>
+      </div>
+      {% endif %}
+      {% capture all_links_menu %}
+      {% for block in section.blocks %}
+      {% assign fmenu = linklists[block.settings.menu].links %}
+      {% if fmenu != blank %}
+      <div class="footer-menu {% cycle '', 'partner', 'international' %}">
+        {% assign menu_title = linklists[block.settings.menu].title %}
+        {% if block.settings.title != blank %}
+        {% assign menu_title = block.settings.title %}
+        {% endif %}
+        <h4 class="footer-title">{{ menu_title }}</h4>
+        <ul>
+          {% for link in fmenu %}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endcapture %}
+      {{ all_links_menu }}
+      {% if section.settings.show_social and social_icons %}
+      {%- assign socials = "Facebook Twitter Pinterest Instagram Tumblr Snapchat YouTube Vimeo" | split: ' ' -%}
+      <div class="footer-social">
+        {% if section.settings.social_title != blank %}
+        <h4 class="footer-title">{{ section.settings.social_title }}</h4>
+        {% endif %}
+        <ul>
+          {%- for social in socials -%}
+          {%- assign social_link = social | prepend: 'social_' | append: '_link' | downcase -%}
+          {%- assign icon_link = social | prepend: 'icon-' | downcase -%}
+          {%- if settings[social_link] != blank -%}
+          <li>
+            <a href="{{ settings[social_link] | escape }}">
+              {%- include icon_link -%}
+            </a>
+          </li>
+          {%- endif -%}
+          {%- endfor -%}
+          {% if shop.customer_accounts_enabled %}
+             {% assign cust_url = routes.account_login_url %}
+             {% if customer %}
+             	{% assign cust_url = routes.account_url %}
+             {% endif %}
+          	<li class="mobile_only"><a href="{{ routes.account_login_url }}">{{ 'customer.login.title' | t }}</a> . <a href="{{ routes.account_register_url }}">{{ 'customer.register.title' | t }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if section.settings.newsletter_title != blank or section.settings.show_newsletter or section.settings.sub_text != blank %}
+      <div class="newsletter">
+        {% if section.settings.newsletter_title != blank %}
+        <h4 class="footer-title">{{ section.settings.newsletter_title }}</h4>
+        {% endif %}
+        {% if section.settings.sub_text != blank %}
+        <p class="">{{ section.settings.sub_text }}</p>
+        {% endif %}
+        {% if section.settings.show_newsletter %}
+        <div class="newsletter-input">
+          {% if section.settings.mailchimp_form_url != blank %}
+          <form action="{{ section.settings.mailchimp_form_url | replace : 'post','post-json' }}&amp;c=?" method="post" class="contact-form subscribe_form">
+            <input type="email" id="email_footer" name="EMAIL" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}">
+            <button  class="news-btn footer_newslatter">{{ 'general.newsletter_form.footer_submit' | t }}</button>
+          </form>
+		  {% else %}
+            {%- assign formId = 'ContactFooter_all_pages' -%}
+            {% form 'customer', id: formId, novalidate: 'novalidate' %}
+            {%- if form.posted_successfully? -%}
+            <p class="form-message form-message--success" tabindex="-1" data-form-status>
+              {{ 'general.newsletter_form.confirmation' | t }}
+            </p>
+            {%- endif -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input type="email" id="email_footer" name="contact[email]" placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}">
+            <button class="news-btn footer_newslatter">{{ 'general.newsletter_form.footer_submit' | t }}</button>
+            {% if form.errors contains 'email' %}
+            <span id="{{ formId }}-email-error" class="input-error-message">
+              <span class="site-footer__newsletter-error error_msg">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+            </span>
+            {% endif %}
+            {% endform %}
+          {% endif %}
+        </div>
+        {% endif %}
+        {% if section.settings.sub_text != blank %}
+        <p class="desktop_only">{{ section.settings.sub_text }}</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% capture bottom_links %}
+    {% assign bmenu = linklists[section.settings.bottom_menu].links %}
+    {% if bmenu != blank %}
+  		{% for link in bmenu %}
+  			<a href="{{ link.url }}">{{ link.title }}</a> {% unless forloop.last %}&nbsp;·&nbsp;{% endunless %}
+  		{% endfor %}
+    {% endif %}
+  {% endcapture %}
+  {% if bottom_links != blank %}
+  <div class="terms-privacy">
+    <p>
+      {{ bottom_links }}
+    </p>
+  </div>
+  {% endif %}
+</footer>
+{% schema %}
+  {
+    "name": "Footer",
+	"max_blocks": 3,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image",
+		"info": "Recommended size: 225x85 PX"
+      },
+	  {
+        "type": "header",
+        "content": "Social icons"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show social media"
+      },
+      {
+        "type": "text",
+        "id": "social_title",
+        "label": "Title"
+      },
+	  {
+        "type": "header",
+        "content": "Newsletter"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_title",
+        "label": "Title"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_newsletter",
+        "label": "Show newsletter"
+      },
+      {
+        "type": "text",
+        "id": "mailchimp_form_url",
+        "label": "Mailchimp Form URL",
+		"info":"Add Action Like: http://xxxxx.us#.list-manage1.com/subscribe/post?u=xxxxx&id=xxxx"
+      },
+      {
+        "type": "text",
+        "id": "sub_text",
+        "label": "Sub text"
+      },
+	  {
+        "type": "header",
+        "content": "Bottom Links"
+      },
+      {
+        "type": "link_list",
+        "id": "bottom_menu",
+        "label": "Bottom Menu"
+      }
+	],
+    "blocks": [
+      {
+        "type": "link_list",
+        "name": "Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Menu"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

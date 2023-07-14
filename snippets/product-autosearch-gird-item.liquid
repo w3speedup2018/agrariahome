@@ -1,0 +1,86 @@
+
+<div class="cart-popup-overlay "></div>
+
+{% assign new_label = false %}
+{% assign current_variant = bold_selected_or_first_available_variant %}
+{%- include 'bold-variant' with current_variant, output: 'none' -%}
+<div class="pr-slide-item">
+  <a href="{{ product.url | within: collection }}">
+    <div class="pr-slide-image">
+      {% unless product.featured_media == null %}
+      <img class="lazy2 lazy3" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '370x450' }}" alt="{{ product.featured_media.alt }}">
+      {% else %}
+      {{ 'product-1' | placeholder_svg_tag }}
+      {% endunless %}
+      {% unless template.suffix contains 'auto_search' %}
+      {% if product.tags contains 'new' %}
+      {% assign new_label = true %}
+      {% endif %}
+      <div class="all_label">
+        {% if new_label %}
+        	<span class="product_label new">{{ 'products.product.new' | t }}</span>
+        {% endif %}
+        {% if current_variant.compare_at_price > bold_variant_price %}
+        	<span class="product_label">{{ 'products.product.special_offer' | t }}</span>
+        {% endif %}
+      </div>
+      {% endunless %}
+    </div>
+    </a>
+    <div class="pr-slide-content">
+      <a href="{{ product.url | within: collection }}">
+      <div class="pr-slide-inner">
+         <h5>{{ product.vendor }}</h5>
+        
+        <p>{{ product.title | truncate: 30 }}</p>
+        <div class="product_price {% if current_variant.compare_at_price > bold_variant_price %} is_compare{% endif %}">
+          <span class="money">{{ bold_variant_price | money }}</span>{% if current_variant.compare_at_price > bold_variant_price %}<del><span class="money">{{ current_variant.compare_at_price | money }}</span></del>{% endif %}
+        </div>
+      </div>
+      </a>
+
+      <div class="pr-slide-hover {% for t in product.tags %}{% if t contains 'get_free_one_for_all' %}open_custom-popup_cl{% endif %}{% endfor %}">
+        {% form 'product', product, data-productid: product.id %}
+        <div class="cm-add-cart-btn-search">
+  			<input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+ 			 <input min="1" type="hidden" id="quantity" name="quantity" value="1"/>
+        {% for  collection in product.collections %}
+          {% if collection.handle == 'airessence-custom-bundles' %}
+          <a href="{{ product.url | within: collection }}">
+            <button disabled="disabled" type="submit" class="add_to_cart_ajax" id="showFreePopup">
+              <span>View Product</span>
+            </button>
+          </a>
+           {% break %}
+          {% else %}
+            <button type="submit" class="add_to_cart_ajax" id="showFreePopup">
+              <span>{{ 'products.product.add_to_cart' | t }}</span>
+            </button>
+          {% break %}
+          {% endif %}
+          
+        {% endfor %}
+
+        </div>
+        <div class="cm-add-to-like">
+          {% include 'swym-product-view', product: product %}<button class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}"></button>
+        </div>
+        {% include 'tags_gird' %}
+        {% endform %}
+
+{%- render 'shappify-bdl-load-bundle' -%}
+
+      </div>
+    </div>
+  
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#showFreePopup").click(function(){
+    $(".oz-pro").addClass("show");
+     $(".cart-popup-overlay").addClass("show");
+    
+  });
+});  
+</script>

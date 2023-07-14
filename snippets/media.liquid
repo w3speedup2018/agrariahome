@@ -1,0 +1,24 @@
+{% case media.media_type %}
+{% when 'image' %}
+<div class="product-img-item">
+  <a class="MagicZoom"  href="{{ media | img_url: 'master' }}" title="{{ media.alt | escape }}" data-gallery='group'>
+    <img src="{{ media | img_url:'600x' }}" alt="{{ media.alt | escape }}">
+  </a>
+</div>
+{% when 'external_video' %}
+<div class="product-img-item is_youtube_video" data-media-id="{{ media.id }}">
+  {{ media | external_video_tag }}
+</div>
+{% when 'video' %}
+<div class="product-img-item" data-media-id="{{ media.id }}">
+  {{ media | video_tag: controls: true }}
+</div>
+{% when 'model' %}
+<div class="product-img-item" data-media-id="{{ media.id }}">
+  {{ media | model_viewer_tag }}
+</div>
+{% else %}
+<div class="product-img-item" data-media-id="{{ media.id }}">
+  {{ media | media_tag }}
+</div>
+{% endcase %}

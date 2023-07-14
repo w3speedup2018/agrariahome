@@ -1,0 +1,26 @@
+<a href="{{ section.settings.img_url }}">
+  <img src="{{ section.settings.image | img_url:'original'}}" class="img-fluid">
+</a>
+{% schema %}
+  {
+    "name": "Diffuser_refills_banner",
+    "settings": [
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Banner image"
+       },{
+        "id": "img_url",
+        "type": "url",
+        "label": "Select Url"
+       }
+      
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

@@ -1,0 +1,702 @@
+<style>
+.cart-slider-popup {
+    border: 1px #d6d6d6;
+}
+  .cart-slider-popup .cart-slider-popup-outer .cart-slider-popup-body .cart-item-slider .slider-item.slider-overlay:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: .7;
+    /* z-index: 400; */
+    background-color: #fff;
+}
+  .slider-item-inner.custom_pop_cl.cl_4_d_opacity{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 1.7;
+    /* z-index: 400; */
+    background-color: #fff;
+  
+  }
+  
+</style>
+<div class="cart-popup-overlay "></div>
+<!---------------- custom code start here ------------>
+
+
+{% capture ca-custom-tax-oz %}
+  {% for product in collections['reeds-and-flowers'].products %}
+{% comment %}{%- include 'bold-product' with product, hide_action: 'skip' -%}{% endcomment %}
+    {% if bold_selected_or_first_available_variant.available and product.tags contains 'Get1_4all' %}
+    <div class="slider-item slider-unchecked is_oz_free">
+      <div class="slider-item-inner custom_pop_cl">
+        <div class="cart-checkbox top_checkbox" >
+          <label class="checkbox-labl">
+            <input type="checkbox" class="input-checkbox" value="{{ bold_price | strip_html }}">
+            <span class="checkmark"></span>
+            <div class="hidden_class" style="visibility:hidden" id="{{ product.id }}" data-id = "{{ product.id }}">
+             {{ bold_price | money }}
+            </div>
+            
+          </label>
+        </div>
+        {% unless product.featured_media == null %}
+        <div class="slider-img"> 
+          <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '110x' }}" alt="{{ product.featured_media.alt }}">
+        </div>
+        {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+        {% endunless %}
+        <div class="slider-content">
+          {% if product.metafields.collection_title.collection_title != blank %}
+          <h3>{{ product.metafields.collection_title.collection_title }}</h3>
+          {% else %}
+          {% if product.collections != blank %}
+          <h3>{{ product.collections.first.title }}</h3>
+          {% endif %}
+          {% endif %}
+          <h4><a href="#">{{ product.title }}</a></h4>
+          <span class="price-free">{{ 'collections.freeProducts.free' | t }}</span>
+          <span class="old-price sdsdsds">{{ bold_price | money }}</span>
+          {% assign id = bold_selected_or_first_available_variant.id %}
+          <div class="qtyAdjust qty-selector-inner p_{{ id }}" data-qty="{{ id }}">
+            <div class="quantity-cart">
+              <span class="adjust minuss new_adjust">-</span>
+              <input type="text" size="2" readonly="" name="updates[]" min="0" data-id="{{ id }}" id="updates_{{ id }}" value="0" class="tc item-quantity">
+              <span class="adjust pluss new_adjust">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+
+
+
+
+<!---- end here --------------------->
+
+
+{% capture only_diffuser %}
+  {% for product in collections['diffuser-refills'].products %}
+{% comment %}{%- include 'bold-product' with product, hide_action: 'skip' -%}{% endcomment %}
+    {% if bold_selected_or_first_available_variant.available and product.tags contains 'Get_11' %}
+    <div class="slider-item slider-unchecked is_diffuser">
+      <div class="slider-item-inner">
+        <div class="cart-checkbox top_checkbox">
+          <label class="checkbox-labl">
+            <input type="checkbox" class="input-checkbox">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        {% unless product.featured_media == null %}
+        <div class="slider-img"> 
+          <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '110x' }}" alt="{{ product.featured_media.alt }}">
+        </div>
+        {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+        {% endunless %}
+        <div class="slider-content">
+          {% if product.metafields.collection_title.collection_title != blank %}
+          <h3>{{ product.metafields.collection_title.collection_title }}</h3>
+          {% else %}
+          {% if product.collections != blank %}
+          <h3>{{ product.collections.first.title }}</h3>
+          {% endif %}
+          {% endif %}
+          <h4><a href="#">{{ product.title }}</a></h4>
+          <span class="price-free">{{ 'collections.freeProducts.free' | t }}</span>
+          <span class="old-price">{{ bold_price | money }}</span>
+          {% assign id = bold_selected_or_first_available_variant.id %}
+          <div class="qtyAdjust qty-selector-inner p_{{ id }}" data-qty="{{ id }}">
+            <div class="quantity-cart">
+              <span class="adjust minuss new_adjust">-</span>
+              <input type="text" size="2" readonly="" name="updates[]" min="0" data-id="{{ id }}" id="updates_{{ id }}" value="0" class="tc item-quantity">
+              <span class="adjust pluss new_adjust">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture only_e_diffuser %}
+  {% for product in collections['diffuser-refills'].products %}
+{% comment %}{%- include 'bold-product' with product, hide_action: 'skip' -%}{% endcomment %}
+    {% if bold_selected_or_first_available_variant.available and product.tags contains 'Get_1' %}
+    <div class="slider-item slider-unchecked is_e_diffuser">
+      <div class="slider-item-inner">
+        <div class="cart-checkbox top_checkbox">
+          <label class="checkbox-labl">
+            <input type="checkbox" class="input-checkbox">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        {% unless product.featured_media == null %}
+        <div class="slider-img"> 
+          <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '110x' }}" alt="{{ product.featured_media.alt }}">
+        </div>
+        {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+        {% endunless %}
+        <div class="slider-content">
+          {% if product.metafields.collection_title.collection_title != blank %}
+          <h3>{{ product.metafields.collection_title.collection_title }}</h3>
+          {% else %}
+          {% if product.collections != blank %}
+          <h3>{{ product.collections.first.title }}</h3>
+          {% endif %}
+          {% endif %}
+          <h4><a href="#">{{ product.title }}</a></h4>
+          <span class="price-free">{{ 'collections.freeProducts.free' | t }}</span>
+          <span class="old-price">{{ bold_price | money }}</span>
+          {% assign id = bold_selected_or_first_available_variant.id %}
+          <div class="qtyAdjust qty-selector-inner p_{{ id }}" data-qty="{{ id }}">
+            <div class="quantity-cart">
+              <span class="adjust minuss new_adjust">-</span>
+              <input type="text" size="2" readonly="" name="updates[]" min="0" data-id="{{ id }}" id="updates_{{ id }}" value="0" class="tc item-quantity">
+              <span class="adjust pluss new_adjust">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture only_pe %}
+  {% for product in collections['petiteessence-diffuser'].products %}
+{% comment %}{%- include 'bold-product' with product, hide_action: 'skip' -%}{% endcomment %}
+    {% if bold_selected_or_first_available_variant.available and product.tags contains 'Get_PE' %}
+    <div class="slider-item slider-unchecked is_PE">
+      <div class="slider-item-inner">
+        <div class="cart-checkbox top_checkbox">
+          <label class="checkbox-labl">
+            <input type="checkbox" class="input-checkbox">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        {% unless product.featured_media == null %}
+        <div class="slider-img"> 
+          <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '110x' }}" alt="{{ product.featured_media.alt }}">
+        </div>
+        {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+        {% endunless %}
+        <div class="slider-content">
+          {% if product.metafields.collection_title.collection_title != blank %}
+          <h3>{{ product.metafields.collection_title.collection_title }}</h3>
+          {% else %}
+          {% if product.collections != blank %}
+          <h3>{{ product.collections.first.title }}</h3>
+          {% endif %}
+          {% endif %}
+          <h4><a href="#">{{ product.title }}</a></h4>
+          <span class="price-free">{{ bold_price | divided_by: 2 | money }}</span>
+          <span class="old-price">{{ bold_price | money }}</span>
+          {% assign id = bold_selected_or_first_available_variant.id %}
+          <div class="qtyAdjust qty-selector-inner p_{{ id }}" data-qty="{{ id }}">
+            <div class="quantity-cart">
+              <span class="adjust minuss new_adjust">-</span>
+              <input type="text" size="2" readonly="" name="updates[]" min="0" data-id="{{ id }}" id="updates_{{ id }}" value="0" class="tc item-quantity">
+              <span class="adjust pluss new_adjust">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% capture free_pe %}
+  {% for product in collections['petiteessence-diffuser-free'].products %}
+{% comment %}{%- include 'bold-product' with product, hide_action: 'skip' -%}{% endcomment %}
+    {% if bold_selected_or_first_available_variant.available and product.tags contains 'Get_PE_free' %}
+    <div class="slider-item slider-unchecked free_PE">
+      <div class="slider-item-inner">
+        <div class="cart-checkbox top_checkbox">
+          <label class="checkbox-labl">
+            <input type="checkbox" class="input-checkbox">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        {% unless product.featured_media == null %}
+        <div class="slider-img"> 
+          <img class="lazy2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ product.featured_media | img_url: '110x' }}" alt="{{ product.featured_media.alt }}">
+        </div>
+        {% else %}
+        {{ 'product-1' | placeholder_svg_tag }}
+        {% endunless %}
+        <div class="slider-content">
+          {% if product.metafields.collection_title.collection_title != blank %}
+          <h3>{{ product.metafields.collection_title.collection_title }}</h3>
+          {% else %}
+          {% if product.collections != blank %}
+          <h3>{{ product.collections.first.title }}</h3>
+          {% endif %}
+          {% endif %}
+          <h4><a href="#">{{ product.title }}</a></h4>
+          <span class="price-free">{{ 'collections.freeProducts.free' | t }}</span>
+          <span class="old-price">{{ bold_price | money }}</span>
+          {% assign id = bold_selected_or_first_available_variant.id %}
+          <div class="qtyAdjust qty-selector-inner p_{{ id }}" data-qty="{{ id }}">
+            <div class="quantity-cart">
+              <span class="adjust minuss new_adjust">-</span>
+              <input type="text" size="2" readonly="" name="updates[]" min="0" data-id="{{ id }}" id="updates_{{ id }}" value="0" class="tc item-quantity">
+              <span class="adjust pluss new_adjust">+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+{% capture oz-pro %}
+  {{ ca-custom-tax-oz }} 
+{% endcapture %} 
+
+
+{% capture both_diffuser %}
+  {{ only_diffuser }}
+  {{ only_e_diffuser }}
+{% endcapture %}
+
+{% capture diffuser_PE %}
+  {{ only_diffuser }}
+  {{ only_pe }}
+{% endcapture %}
+
+{% capture diffuser_free_pe %}
+  {{ only_diffuser }}
+  {{ free_pe }}
+{% endcapture %}
+
+{% capture e_diffuser_PE %}
+  {{ only_e_diffuser }}
+  {{ only_pe }}
+{% endcapture %}
+
+{% capture e_diffuser_free_pe %}
+  {{ only_e_diffuser }}
+  {{ free_pe }}
+{% endcapture %}
+
+{% capture PE_free_pe %}
+  {{ only_pe }}
+  {{ free_pe }}
+{% endcapture %}
+
+{% capture diff_e_diffuser_PE %}
+  {{ only_diffuser }}
+  {{ only_e_diffuser }}
+  {{ only_pe }}
+{% endcapture %}
+
+{% capture e_diffuser_PE_free_pe %}
+  {{ only_e_diffuser }}
+  {{ only_pe }}
+  {{ free_pe }}
+{% endcapture %}
+
+{% capture PE_free_pe_diff %}
+  {{ only_pe }}
+  {{ free_pe }}
+  {{ only_diffuser }}
+{% endcapture %}
+
+{% capture free_pe_diff_e_diffuser %}
+  {{ free_pe }}
+  {{ only_diffuser }}
+  {{ only_e_diffuser }}
+{% endcapture %}
+
+{% capture all_four %}
+  {{ only_diffuser }}
+  {{ only_e_diffuser }}
+  {{ only_pe }}
+  {{ free_pe }}
+{% endcapture %}
+
+
+
+{% if oz-pro != blank %}
+<div class="cart-slider-popup oz-pro" id="get_1_for_all">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider">
+        {{ oz-pro }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if only_diffuser != blank %}
+<div class="cart-slider-popup only_diffuser">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider">
+        {{ only_diffuser }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if only_e_diffuser != blank %}
+<div class="cart-slider-popup only_e_diffuser">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider">
+        {{ only_e_diffuser }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if only_pe != blank %}
+<div class="cart-slider-popup only_pe">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider">
+        {{ only_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if free_pe != blank %}
+<div class="cart-slider-popup free_PE">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider">
+        {{ free_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if both_diffuser != blank %}
+<div class="cart-slider-popup both_diffuser">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ both_diffuser }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if diffuser_PE != blank %}
+<div class="cart-slider-popup diffuser_PE">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ diffuser_PE }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if diffuser_free_pe != blank %}
+<div class="cart-slider-popup diffuser_free_pe">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ diffuser_free_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if e_diffuser_PE != blank %}
+<div class="cart-slider-popup e_diffuser_PE">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ e_diffuser_PE }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if e_diffuser_free_pe != blank %}
+<div class="cart-slider-popup e_diffuser_free_pe">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ e_diffuser_free_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if PE_free_pe != blank %}
+<div class="cart-slider-popup PE_free_pe">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ PE_free_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if diff_e_diffuser_PE != blank %}
+<div class="cart-slider-popup diff_e_diffuser_PE">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ diff_e_diffuser_PE }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if e_diffuser_PE_free_pe != blank %}
+<div class="cart-slider-popup e_diffuser_PE_free_pe">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ e_diffuser_PE_free_pe }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if PE_free_pe_diff != blank %}
+<div class="cart-slider-popup PE_free_pe_diff">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ PE_free_pe_diff }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if free_pe_diff_e_diffuser != blank %}
+<div class="cart-slider-popup free_pe_diff_e_diffuser">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ free_pe_diff_e_diffuser }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% if all_four != blank %}
+<div class="cart-slider-popup all_four">
+  <div class="cart-slider-popup-outer">
+    <div class="cart-popup-head">
+      {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      <button class="action-close" data-role="closeBtn" type="button"> </button>
+      <div class="products-selected-counter">
+        <span class="counter-value">Selected <span class="qty_display">0</span> of <span class="free_qty" data-val></span></span>
+      </div>
+    </div>
+    <div class="cart-slider-popup-body">
+      <div class="cart-item-slider is_four">
+        {{ all_four }}
+      </div>
+      <button class="add-to-bag-btn">Add to Bag</button>
+    </div>
+  </div>
+</div> 
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Free Products",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      }
+	]
+  }
+{% endschema %}

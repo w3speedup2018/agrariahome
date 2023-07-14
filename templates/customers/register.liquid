@@ -1,0 +1,146 @@
+<section class="user-section">
+  <div class="container">
+    <div class="user-cover">
+      {% if settings.content_login != blank %}
+      <div class="content_cust">
+        {{ settings.content_login }}
+      </div>
+      {% endif %}
+      <div class="user-inner-box">
+        <div class="cm-login-main-wrapper">
+          <h2 class="account-title cm-ct-title">{{ 'customer.register.page_title' | t }}</h2>
+          <div class="cm-create-form-wrapper">
+            {%- assign formId = 'RegisterForm' -%}
+            {% form 'create_customer', id: formId, novalidate: 'novalidate' %}
+            <div class="form-wrap">              
+              {% include 'form-status', form: form, form_id: formId %}
+              <div class="form-group cm-form-title-inner">
+                {{ 'customer.register.personal_info' | t }}
+              </div>
+              <div class="form-group">
+                <label class="label" for="{{ formId }}-FirstName"><span>{{ 'customer.register.first_name' | t }}</span></label>
+                <input type="text" name="customer[first_name]" id="{{ formId }}-FirstName" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocapitalize="words" autofocus>
+              </div>
+              <div class="form-group">
+                <label class="label" for="{{ formId }}-LastName"><span>{{ 'customer.register.last_name' | t }}</span></label>
+                <input type="text" name="customer[last_name]" id="{{ formId }}-LastName" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words" autofocus>
+              </div>
+              <div class="form-group cm-checkbox-form">
+                <input type="checkbox" id="accepts_marketing" name="customer[accepts_marketing]"/>
+                <label class="label" for="accepts_marketing"><span>{{ 'customer.register.subscribe_label' | t }}</span></label>
+              </div>
+              <div class="form-group">
+                <label class="label" for="birthday"><span>{{ 'customer.register.date_of_birth' | t }}</span></label>
+                <input type="date" value="" name="customer[note][birthday]" id="birthday" class="text" size="30" max='{{ "now" | date: "%Y-%m-%d" }}'/>
+              </div>
+            </div>
+            <div class="form-wrap">              
+              <div class="form-group cm-form-title-inner">
+                {{ 'customer.register.signin_info' | t }}
+              </div>
+              <div class="form-group">
+                <label for="{{ formId }}-email" class="label"><span>{{ 'customer.register.email' | t }}</span></label>
+                <input type="email" name="customer[email]" id="{{ formId }}-email" placeholder="{{ 'customer.register.email' | t }}" {% if form.errors contains "email" %} class="error"{% elsif form.email %} value="{{ form.email }}"{% endif %} autocomplete="off" autocapitalize="off">
+              </div>
+              <div class="form-group">
+                <label for="password" class="label"><span>{{ 'customer.register.password' | t }}</span></label>
+                <input type="password" name="customer[password]" id="password" placeholder="{{ 'customer.register.password' | t }}" {% if form.errors contains "password" %} class="error"{% endif %}>
+              </div>
+              <div class="form-group">
+                <label for="confirm_password" class="label"><span>{{ 'customer.register.confirm_password' | t }}</span></label>
+                <input type="password" id="confirm_password" placeholder="{{ 'customer.register.confirm_password' | t }}" >
+              </div>
+            </div>
+            <div class="button"> 
+              <button type="submit" value="{{ 'customer.register.submit' | t }}" class="btn">{{ 'customer.register.submit' | t }}</button>
+              <div class="already-have-ac">
+                <a href="/account/login">{{ 'customer.register.already_account' | t }}</a>
+              </div>
+            </div>
+            {% endform %}
+          </div>
+        </div>
+        <p></p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  $(document).ready(function(){       
+
+    $('body').on('change','#accepts_marketing',function() {
+      if(this.checked) {
+        if($(this).closest('form').find('#customer_tag').length == 0){
+          $(this).closest('form').prepend('<input type="hidden" name="customer[tags]" id="customer_tag" value="newsletter">');
+        }
+      }else{
+        $(this).closest('form').find('#customer_tag').remove();
+      }
+    });
+    
+    var form_id = '#{{ formId }}';
+    $(form_id).submit(function(){
+      var form = $(this);
+      console.log(form_id);
+      var x = true;
+      var fn = form.find(form_id +'-FirstName');
+      var ln = form.find(form_id +'-LastName');
+      var em = form.find(form_id +'-email');
+      var pass = form.find('#password');
+      var cpas = form.find('#confirm_password');
+      var err_msg = 'This is a required field.';
+      var conf_err_msg = 'Please enter the same value again.';
+      form.find('.error_msg').remove();
+
+      if(fn.val().trim() == ''){
+        $(fn).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(fn).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(fn).parent().removeClass('haserror');
+      } 
+      if(ln.val().trim() == ''){
+        $(ln).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(ln).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(ln).parent().removeClass('haserror');
+      } 
+      var err_msg = 'This is a required field.';
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      if(em.val().trim() == '' || !regex.test(em.val())) {
+        $(em).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(em).parent().addClass('haserror');
+        x = false;
+      } else{
+        $(em).parent().removeClass('haserror');
+      }
+      if(pass.val().trim() == ''){
+        $(pass).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(pass).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(pass).parent().removeClass('haserror');
+      } 
+      if(cpas.val().trim() == ''){
+        $(cpas).parent().append('<span class="error_msg">'+ err_msg +'</span>');        
+        $(cpas).parent().addClass('haserror');
+        x = false;
+      }else{        
+        $(cpas).parent().removeClass('haserror');
+        if(pass.val() != cpas.val() ){
+          $(cpas).parent().append('<span class="error_msg">'+ conf_err_msg +'</span>');        
+          $(cpas).parent().addClass('haserror');
+        }else{        
+          $(cpas).parent().removeClass('haserror');
+        } 
+      } 
+
+      if( x == false){
+        $('.haserror:eq(0) input').trigger('focus');
+        return false;        
+      }
+
+    });
+  });
+</script>

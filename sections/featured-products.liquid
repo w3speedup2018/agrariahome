@@ -1,0 +1,68 @@
+{% assign collection = collections[section.settings.collection] %}
+
+<section class="top-products-wrapper">
+  <div class="min-container">
+    {% if section.settings.title != blank %}
+    <div class="section-title">
+      <h3>{{ section.settings.title }}</h3>
+    </div>
+    {% else %}
+    <div class="section-title">
+      <h3>{{ collection.title }}</h3>
+    </div>
+    {% endif %}
+    <div class="product-slider">
+      
+      {% for product in collection.products limit:section.settings.limit %}
+		{%- include 'bold-product' with product, hide_action: 'skip' -%}
+      {% include 'product-gird-item' %}
+      {% else %}
+      {% for i in (1..section.settings.limit) %}
+      <div class="pr-slide-item">
+        <div class="grid-view-item product-card">
+          <div class="grid-view-item__image-wrapper">
+            {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+            {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+          <div class="h4 grid-view-item__title" aria-hidden="true">{{ 'general.onboarding.product_title' | t }}</div>
+        </div>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Featured Products",
+    "settings": [
+      {
+		"type":"text",
+		"id":"title",
+		"label":"Title"
+      },
+	  {
+		"type":"collection",
+		"id":"collection",
+		"label":"Collection"
+      },
+	  {
+          "type":      "range",
+          "id":        "limit",
+          "min":       5,
+          "max":        12,
+          "step":       1,
+          "label":     "Limit",
+          "default":   8
+      }
+	],
+    "presets": [
+      {
+        "name": "Featured Products",
+        "category": "Index"
+      }
+    ]
+  }
+{% endschema %}

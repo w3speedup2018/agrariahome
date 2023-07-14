@@ -1,0 +1,38 @@
+{%- if form.posted_successfully? -%}
+  <p class="form-message form-message--success" tabindex="-1" data-form-status>
+    {% if page.handle == 'contact-us' %}
+    <span class="svg"><svg viewBox="0 -46 417.81333 417"><path d="m159.988281 318.582031c-3.988281 4.011719-9.429687 6.25-15.082031 6.25s-11.09375-2.238281-15.082031-6.25l-120.449219-120.46875c-12.5-12.5-12.5-32.769531 0-45.246093l15.082031-15.085938c12.503907-12.5 32.75-12.5 45.25 0l75.199219 75.203125 203.199219-203.203125c12.503906-12.5 32.769531-12.5 45.25 0l15.082031 15.085938c12.5 12.5 12.5 32.765624 0 45.246093zm0 0"></path></svg></span>
+    {% endif %}
+    {{ success_message | default: 'contact.form.post_success' | t }}
+  </p>
+{%- endif -%}
+
+{% comment %} We need to add this so the errors are output in the right order {% endcomment %}
+{% assign error_order = "author, email, body, password, form" | split: ", " %}
+
+{%- if form.errors -%}
+  <div class="form-message form-message--error">
+    {% comment %}<h2 class="h3 form-message__title " tabindex="-1" data-form-status>{{ 'contact.form.error_heading' | t }}</h2>{% endcomment %}
+    <ul>
+      {% for error in error_order %}
+        {% for field in form.errors %}
+          {% if error == field %}
+            <li>
+              {% capture field_label %}
+                {% case field %}
+                  {% when 'author' %}
+                    {{ 'contact.form.name' | t }}
+                  {% when 'body' %}
+                    {{ 'contact.form.message' | t }}
+                  {% else %}
+                    {{ form.errors.translated_fields[field] }}
+                {% endcase %}
+              {% endcapture %}
+              <a href="#{{ form_id }}-{{ field }}" class="form-message__link aaa">{% if form.errors.messages[field] contains 'please click the link included to verify your email address' %}{{ form.errors.messages[field] | replace : 'please click the link included to verify your email address','please click the verification link to create your account'}}{% else %}{{ form.errors.messages[field] }}{% endif %}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+{%- endif -%}

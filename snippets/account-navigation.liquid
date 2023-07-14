@@ -1,0 +1,9 @@
+<div class="account-navigation {{ template }}">
+  <ul>
+    <li {% if template contains 'customers/account' %}{% unless template contains 'order_history' %}class="active"{% endunless %}{% endif %}><a href="/account">My Account</a></li>
+    <li {% if template contains 'customers/addresses' %}class="active"{% endif %}><a href="/account/addresses">My Addresses</a></li>
+    <li {% if template contains 'order_history' %}class="active"{% endif %}><a href="/account?view=order_history">Order History</a></li>
+    <li ><a href="#swym-wishlist" >{{ 'customer.wishlist.title' | t }}</a></li>
+    {% if customer %}<li>{{ 'layout.customer.log_out' | t | customer_logout_link }}</li>{% endif %}
+  </ul>
+</div>

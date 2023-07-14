@@ -1,0 +1,38 @@
+  <div class="row">
+    <div class="col-sm-6 left-fragnances">
+      {{ section.settings.diffuser_text-box }}
+    </div>
+    <div class="col-sm-6">
+      <a href="{{ section.settings.diffuser_img_url }}">
+        <img class="img-fluid" src="{{ section.settings.diffuser_image | img_url:'original'}}">
+      </a>
+    </div>
+  </div>
+
+{% schema %}
+  {
+    "name": "Text Box",
+    "settings": [
+      {
+        "id": "diffuser_text-box",
+        "type": "html",
+        "label": "Content"
+      },
+      {
+        "id": "diffuser_image",
+        "type": "image_picker",
+        "label": "Image"
+      },{
+        "id": "diffuser_img_url",
+        "type": "url",
+        "label": "Select Url"
+       }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

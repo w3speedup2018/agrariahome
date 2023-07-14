@@ -1,0 +1,147 @@
+<div class="row">
+  {% for block in section.blocks %}
+  {% if block.type == 'text' %}
+  {% render '02-heading', title: block.settings.title %}
+
+  {% elsif block.type == 'textarea'  %}
+  {% render '03-text', sub_title: block.settings.sub_title, text: block.settings.text %}
+
+  {% elsif block.type == 'image_picker'  %}
+  {% render '04-small-image', image: block.settings.image, image_url: block.settings.image_url, image_full_size: block.settings.full_image, roll: block.settings.rollaction %}
+
+  {% elsif block.type == 'range'  %}
+  {% render '05-horizontal-line', padding_top: block.settings.padding_top, padding_bottom: block.settings.padding_bottom %}
+
+  {% elsif block.type == 'collection'  %}
+  {% render '06-image-with-text', image: block.settings.imagewt, title: block.settings.imagewt_title, text: block.settings.imagewt_text, url: block.settings.imagewt_url, button_text: block.settings.imagewt_button_text, roll2: block.settings.rollaction2  %}
+
+  {% endif %}
+  {% endfor %}
+</div>
+ 
+
+{% schema %}
+  {
+    "name": "Page Sections",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Headline",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }
+        ]
+
+      },
+      {
+        "type": "textarea",
+        "name": "Content",
+        "settings":[
+          {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub-title"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "name": "Image",
+        "settings":[
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "image_url",
+            "label": "Image Link"
+          },
+          {
+            "type": "checkbox",
+            "id": "rollaction",
+            "label": "Off Rollover Action"
+          },
+		  {
+			"type": "image_picker",
+			"id": "full_image",
+			"label": "Full Size Image"
+		  }
+        ]
+      },
+      {
+        "type": "range",
+        "name": "Horizontal Line",
+        "settings":[
+          {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "label": "Space Top",
+            "default": 40
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "label": "Space Bottom",
+            "default": 40
+          }
+        ]
+      },
+      {
+        "type": "collection",
+        "name": "Image With Text",
+        "settings":[
+          {
+            "type": "image_picker",
+            "id": "imagewt",
+            "label": "Image"
+          },
+          {
+            "type": "checkbox",
+            "id": "rollaction2",
+            "label": "Off Rollover Action"
+          },
+          {
+            "type": "url",
+            "id": "imagewt_url",
+            "label": "Image Link"
+          },
+          {
+            "type": "text",
+            "id": "imagewt_title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "imagewt_text",
+            "label": "Content"
+          },
+          {
+            "type": "text",
+            "id": "imagewt_button_text",
+            "label": "Button Text",
+            "default": "SHOP NOW"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

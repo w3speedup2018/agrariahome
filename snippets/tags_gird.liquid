@@ -1,0 +1,11 @@
+{% if product.tags contains 'Buy_PE' %}
+<input type="hidden" value="PE Half Buy" name="properties[_buyItem]">
+{% elsif product.tags contains 'Buy_PE_free' %}
+<input type="hidden" value="PE Free Buy" name="properties[_buyItem]">
+{% elsif product.tags contains 'Buy_22' %}
+<input type="hidden" value="DE Buy" name="properties[_buyItem]">
+{% elsif product.tags contains 'Buy_2' %}
+<input type="hidden" value="E-DE Buy" name="properties[_buyItem]">
+{% elsif product.tags contains 'Get1_4all' %}
+<input type="hidden" value="E-DE Free one Buy" name="properties[_buyItem]">
+{% endif %}

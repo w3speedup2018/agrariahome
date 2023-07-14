@@ -1,0 +1,7 @@
+<label>{{ 'collections.sorting.show' | t }}</label>
+<select class="user_pagination">
+  <option {% if has18 %}selected="selected"{% endif %} value="{{ collection.url }}{{ all_cur_tags }}?sort_by={{ sort_by }}{% if is_list %}&view=list{% endif %}">18</option>
+  <option {% if has24 %}selected="selected"{% endif %} value="{{ collection.url }}{{ all_cur_tags }}?view={% unless is_list %}24{% else %}list24{% endunless %}&sort_by={{ sort_by }}">24</option>
+  <option {% if has48 %}selected="selected"{% endif %} value="{{ collection.url }}{{ all_cur_tags }}?view={% unless is_list %}48{% else %}list48{% endunless %}&sort_by={{ sort_by }}">48</option>
+  <option {% if hasall %}selected="selected"{% endif %} value="{{ collection.url }}{{ all_cur_tags }}?view={% unless is_list %}all{% else %}listall{% endunless %}&sort_by={{ sort_by }}">All</option>
+</select>

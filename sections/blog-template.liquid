@@ -1,0 +1,158 @@
+<div class="normal_page general-use">
+  <div class="min-container">
+    
+    <div class="row">
+        {% for block in section.blocks %}
+        {% if block.type == 'text' %}
+        {% render 'blog-heading', blog_title: block.settings.blog_title %}
+
+        {% elsif block.type == 'textarea'  %}
+        {% render 'blog-text', blog_sub_title: block.settings.blog_sub_title, blog_text: block.settings.blog_text %}
+
+        {% elsif block.type == 'image_picker'  %}
+        {% render 'blog-small-image', blog_image: block.settings.blog_image, blog_image_url: block.settings.blog_image_url %}
+
+        {% elsif block.type == 'range'  %}
+        {% render 'blog-horizontal-line', padding_top: block.settings.padding_top, padding_bottom: block.settings.padding_bottom %}
+
+        {% elsif block.type == 'collection'  %}
+        {% render '06-image-with-text', image: block.settings.imagewt, title: block.settings.imagewt_title, text: block.settings.imagewt_text, url: block.settings.imagewt_url %}
+
+        {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% paginate blog.articles by 1000 %}
+<section class="press-wrapper">
+  <div class="min-container">
+    <div class="photo-galerry">
+      {% for article in blog.articles %}
+      	{% capture get_sec_img %}
+          {% if article.excerpt.size > 0 and article.excerpt contains '<img' %}
+			{{ article.excerpt }}
+          {% endif %}
+      	{% endcapture %}
+        {% if article.image %}
+        <div class="photo-items">
+          <a href="{{ article.url }}">
+            <img src="{{ article.image | img_url : '225x' }}" alt="{{ article.image.alt | escape }}" {% if get_sec_img != blank %} class="main_img"{% endif %}>
+            {{ get_sec_img | replace : 'src=' , 'class="hover_img" src=' | replace: 'width=' , 'data-width=' | replace: 'height=' , 'data-height='}}
+          </a>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{%- if paginate.pages > 1 -%}
+{% include 'pagination', paginate: paginate %}
+{%- endif -%}
+
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Blog Page Sections",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Blog Headline",
+        "settings": [
+          {
+            "type": "text",
+            "id": "blog_title",
+            "label": "Blog Title"
+          }
+        ]
+
+      },
+      {
+        "type": "textarea",
+        "name": "Content",
+        "settings":[
+          {
+            "type": "text",
+            "id": "blog_sub_title",
+            "label": "Blog-Sub-title"
+          },
+          {
+            "type": "richtext",
+            "id": "blog_text",
+            "label": "Blog Text"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "name": "Small Image",
+        "settings":[
+          {
+            "type": "image_picker",
+            "id": "blog_image",
+            "label": "Blog Image"
+          },
+          {
+            "type": "url",
+            "id": "blog_image_url",
+            "label": "Blog Image Link"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "name": "Horizontal Line",
+        "settings":[
+          {
+            "type": "range",
+            "id": "pad_top",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "label": "Space Top",
+            "default": 40
+          },
+          {
+            "type": "range",
+            "id": "pad_bot",
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "unit": "px",
+            "label": "Space Bottom",
+            "default": 40
+          }
+        ]
+      },
+      {
+        "type": "collection",
+        "name": "Image With Text",
+        "settings":[
+          {
+            "type": "image_picker",
+            "id": "imagewt",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "imagewt_url",
+            "label": "Image Link"
+          },
+          {
+            "type": "text",
+            "id": "imagewt_title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "imagewt_text",
+            "label": "Content"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

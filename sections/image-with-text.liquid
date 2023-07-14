@@ -1,0 +1,95 @@
+{% capture all_items %}
+  {% for block in section.blocks %}
+   {% if block.settings.title != blank or block.settings.subtitle != blank or block.settings.button_text != blank or block.settings.img != blank %}
+    <div class="product-item">
+      <div class="product-item-wrapper">
+        <a href="{{ block.settings.link }}">
+          <div class="product-image">
+            {% if block.settings.img != blank %}
+            	<img class="lazy2 lazy3" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" data-src="{{ block.settings.img | img_url : '370x' }}" alt="{{ block.settings.img.alt }}">
+            {% else %}
+            	{{ 'product-1' | placeholder_svg_tag }}
+            {% endif %}
+          </div>
+        </a>
+        {% if block.settings.title != blank or block.settings.subtitle != blank or block.settings.button_text != blank %}
+          <div class="product-content">
+            {% if block.settings.title != blank %}
+            <h5>
+              <a href="{{ block.settings.link }}">
+                {{ block.settings.title }}
+              </a>
+            </h5>
+            {% endif %}
+            {% if block.settings.subtitle != blank %}
+            <p>{{ block.settings.subtitle }}</p>
+            {% endif %}
+            {% if block.settings.button_text != blank %}
+            <a href="{{ block.settings.link }}" class="btn-primary"><span>{{ block.settings.button_text }}</span></a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+   {% endif %}
+  {% endfor %}
+{% endcapture %}
+{% if all_items != blank %}
+<section class="product-wrapper" data-section="image-with-text">
+  <div class="min-container">
+    <div class="row">
+      {{ all_items }}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% schema %}
+  {
+    "name": "Image with text",
+	"max_blocks": 3,
+    "settings": [
+	],
+    "blocks": [
+      {
+        "type": "image_with_text",
+        "name": "Image with text",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Image",
+			"info": "Recommended size: 370x425 PX"
+          },
+		  {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+			"default":"Title"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Sub title",
+			"default":"Sub title"
+          },
+          {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image with text",
+        "category": "Index"
+      }
+    ]
+  }
+{% endschema %}

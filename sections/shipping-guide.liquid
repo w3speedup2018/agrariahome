@@ -1,0 +1,174 @@
+<section class="shipping-guide">
+  <div class="shipping-guide-wrapper">
+    <div class="shipping-title">
+      <h2>{{ page.title }}</h2>
+      {% if section.settings.page_description != blank %}
+      {{ section.settings.page_description }}
+      {% endif %}
+      {% if section.settings.banner_img != blank %}
+      <img src="{{ section.settings.banner_img | img_url: 'master' }}" alt="{{ section.settings.banner_img.alt }}">
+      {% endif %}
+    </div>
+    <div class="continental-shipping">
+      {% for block in section.blocks %}
+        {% if block.settings.title != blank %}
+          <h2 class="{% if block.settings.set_light %}set_light_heading {% endif %} {% if block.settings.show_hide %} hidden{% endif %}"><b>{{ block.settings.title }}</b></h2>
+        {% endif %}
+        {% if block.settings.desc_cont != blank %}
+        <div class="ship_desc {% if block.settings.set_light %}set_light_desc{% endif %} {% if block.settings.show_hide %} hidden{% endif %}">
+          {{ block.settings.desc_cont }}
+        </div>
+        {% endif %}
+        {% capture this_ul %}
+        {% for i in (1..8) %}
+        {% capture title %}title{{ i }}{% endcapture %}
+        {% capture content %}content{{ i }}{% endcapture %}
+        {% if block.settings[title] != blank or block.settings[content] != blank %}
+        <li {% if block.settings.set_light %}class="set_light_li"{% endif %}>
+          {% if block.settings[title] != blank %}
+          <span>{{ block.settings[title] }}</span>
+          {% endif %}
+          {% if block.settings[content] != blank %}
+          <div class="content">
+          {{ block.settings[content] }}
+          </div>
+          {% endif %}
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% endcapture %}
+        {% if this_ul != blank %}
+        <ul class=" {% if block.settings.show_hide %} hidden{% endif %}">
+          {{ this_ul }}
+        </ul>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Shipping Guide",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "banner_img",
+        "label": "Banner Image"		
+      },
+      {
+        "type": "richtext",
+        "id": "page_description",
+        "label": "Page Description"		
+      }
+	],
+	"blocks":[
+      {
+          "name": "Continental Content",
+          "type": "continental_content",
+          "settings":[
+			{
+              "type": "checkbox",
+              "id": "show_hide",
+              "label": "Hide this"		
+            },
+			{
+              "type": "checkbox",
+              "id": "set_light",
+              "label": "Heighlight Color"		
+            },
+            {
+              "type": "text",
+              "id": "title",
+              "label": "Continental Title"		
+            },
+            {	
+              "type": "richtext",
+              "id": "desc_cont",
+              "label": "Description"
+            },
+            {	
+              "type": "text",
+              "id": "title1",
+              "label": "Title 1"
+            },
+            {	
+              "type": "richtext",
+              "id": "content1",
+              "label": "Content 1"
+            },
+            {	
+              "type": "text",
+              "id": "title2",
+              "label": "Title 2"
+            },
+            {	
+              "type": "richtext",
+              "id": "content2",
+              "label": "Content 2"
+            },
+            {	
+              "type": "text",
+              "id": "title3",
+              "label": "Title 3"
+            },
+            {	
+              "type": "richtext",
+              "id": "content3",
+              "label": "Content 3"
+            },
+            {	
+              "type": "text",
+              "id": "title4",
+              "label": "Title 4"
+            },
+            {	
+              "type": "richtext",
+              "id": "content4",
+              "label": "Content 4"
+            },
+            {	
+              "type": "text",
+              "id": "title5",
+              "label": "Title 5"
+            },
+            {	
+              "type": "richtext",
+              "id": "content5",
+              "label": "Content 5"
+            },
+            {	
+              "type": "text",
+              "id": "title6",
+              "label": "Title 6"
+            },
+            {	
+              "type": "richtext",
+              "id": "content6",
+              "label": "Content 6"
+            },
+            {	
+              "type": "text",
+              "id": "title7",
+              "label": "Title 7"
+            },
+            {	
+              "type": "richtext",
+              "id": "content7",
+              "label": "Content 7"
+            },
+            {	
+              "type": "text",
+              "id": "title8",
+              "label": "Title 8"
+            },
+            {	
+              "type": "richtext",
+              "id": "content8",
+              "label": "Content 8"
+            }
+          ]
+      }
+	]
+  }
+{% endschema %}

@@ -1,0 +1,40 @@
+<section class="category-main vegan-page">
+  {% if section.settings.banner_img != blank %}
+  <div class="category-banner">
+    <img src="{{ section.settings.banner_img | img_url: '1920x' }}" alt="{{ section.settings.banner_img.alt }}">
+  </div>
+  {% endif %}
+  <div class="min-container">
+    
+    <div class="category-title">
+      <h2 class="cms-page-heading">
+        {{ page.title }}
+      </h2>
+    </div>
+    
+    {% if section.settings.page_description != blank %}
+    <div class="vegan-content">
+      {{ section.settings.page_description }}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "banner_img",
+        "label": "Banner Image",
+        "info": "recomenadade size : 1920x600"
+      },
+      {
+        "type": "richtext",
+        "id": "page_description",
+        "label": "Page Description"		
+      }
+	]
+  }
+{% endschema %}

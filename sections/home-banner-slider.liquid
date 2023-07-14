@@ -1,0 +1,121 @@
+{% capture all_slides %}
+  {% for block in section.blocks %}
+      <div class="hero-item">
+        {% if block.settings.link != blank %}
+          <a href="{{ block.settings.link }}">
+       
+            {% if block.settings.img == blank %}
+              <div class="hero-item-container">
+                <video style="width: 100%" muted autoplay loop class="hero-item__video">
+                  <source 
+                    src="{{ block.settings.video_link }}" 
+                    type="video/mp4" 
+                  />
+                </video> 
+              </div>
+              {% else %}
+                <img class="{% if block.settings.mobile_img != blank %}xl-show{% endif %}" srcset="{{ block.settings.img | img_url: '1512x' }} 1536w,{{ block.settings.img | img_url: '1080x' }} 1280w,{{ block.settings.img | img_url: '720x' }} 768w,{{ block.settings.img | img_url: '360x'}} 320w" alt="{{ block.settings.img.alt }}">
+                {% if block.settings.mobile_img != blank %}
+                  <img class="md-show" srcset="{{ block.settings.mobile_img | img_url: '720x' }} 768w,{{ block.settings.mobile_img | img_url: '360x'}} 320w" alt="{{ block.settings.img.mobile_img }}">
+              {% endif %}
+            {% endif %}
+          </a>
+
+        {% endif %}
+      </div>
+
+  {% endfor %} 
+{% endcapture %}
+
+<style>
+  .hero-item__video {
+    object-fit: cover;
+    height: 634px;
+  }
+
+  @media (max-width: 1440px) {
+    .hero-item__video {
+      height: 480px;
+    }
+  }
+  @media (max-width: 1024px) {
+    .hero-item__video {
+      height: 341px;
+    }
+  }
+  @media (max-width: 768px) {
+    .hero-item__video {
+      height: 256px;
+    }
+  }
+
+  @media (max-width: 425px) {
+    .hero-item__video {
+      height: 546px;
+    }
+  }
+  @media (max-width: 414px) {
+    .hero-item__video {
+      height: 532px;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .hero-item__video {
+      height: 482px;
+    }
+  }
+
+
+</style>
+
+{% if all_slides != blank %}
+  <section class="home-hero" data-section="home-banner-slider">
+    <div class="hero-slider">
+      {{ all_slides }}
+    </div>
+  </section>
+{% endif %}
+{% schema %}
+  {
+    "name": "Banner Slider",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "slide_image",
+        "name": "Slide Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Desktop Image",
+		      	"info": "Recommended size: 1920x670 PX"
+          },
+		      {
+            "type": "image_picker",
+            "id": "mobile_img",
+            "label": "Mobile Image",
+		      	"info": "Recommended size: 700x550 PX"
+          },
+
+          {
+            "type": "url",
+            "id": "video_link",
+            "label": "Video"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Banner Slider",
+        "category": "Index"
+      }
+    ]
+  }
+{% endschema %}

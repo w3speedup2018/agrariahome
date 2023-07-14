@@ -1,0 +1,147 @@
+
+<section class="user-section">
+  <div class="container">
+    <div class="section-header">
+      <h1 class="account-title">{{ 'customer.account.title' | t }}</h1>
+    </div>
+    <div class="account-section">
+      {% include 'account-navigation' %}
+      <div class="account-content">
+        <div class="row">
+          <h2>{{ 'customer.account.account_info' | t }}</h2>
+          <div class="col-address">
+            <div class="col-address-item">
+              <div class="address-cover">
+                <h2 class="account-title">{{ 'customer.account.details' | t }}</h2>                
+                <h3 class="h5">
+                  <p>{{ customer.name }}</p>
+                  <!-- Begin ReCharge code -->
+                  <p id="rc_link_container">
+                    <a href="/tools/recurring/login">Manage Subscriptions</a>
+                  </p>
+                  <!-- End ReCharge code -->
+                  <p>{{ customer.email }}</p>
+                </h3>
+                <p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+              </div>
+            </div>
+          </div>	
+
+          {% capture default_address %}
+          {% for address in customer.addresses %}
+          {% if address == customer.default_address %}
+          <div class="col-address-item">
+            <div class="address-cover">
+              <h2 class="account-title">
+                {% if address == customer.default_address %}{{ 'customer.addresses.default' | t }}{% else %}{{ 'customer.addresses.other' | t }}{% endif %}
+              </h2>      
+              <h3 class="h5">
+                <p>
+                  {{ address.company }}<br>
+                  {{ address.street }}<br>
+                  {{ address.city | capitalize }}<br>
+                  {% if address.province_code %}
+                  {{ address.province_code | upcase }}<br>
+                  {% endif %}
+                  {{ address.zip | upcase }}<br>
+                  {{ address.country }}<br>
+                  {{ 'customer.addresses.tel' | t }}<a href="tel:{{ address.phone }}">{{ address.phone }}</a>
+                </p>
+              </h3>
+              <p><a href="/account/addresses">{{ 'customer.account.edit_addresses' | t }}</a></p>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+          {% endcapture %}
+          {% capture other_address %}
+          {% for address in customer.addresses %}
+          {% unless address == customer.default_address %}
+          <div class="col-address-item">
+            <div class="address-cover">
+              <h2 class="account-title">
+                {% if address == customer.default_address %}{{ 'customer.addresses.default' | t }}{% else %}{{ 'customer.addresses.other' | t }}{% endif %}
+              </h2>      
+              <h3 class="h5">
+                <p>
+                  {{ address.company }}<br>
+                  {{ address.street }}<br>
+                  {{ address.city | capitalize }}<br>
+                  {% if address.province_code %}
+                  {{ address.province_code | upcase }}<br>
+                  {% endif %}
+                  {{ address.zip | upcase }}<br>
+                  {{ address.country }}<br>
+                  {{ 'customer.addresses.tel' | t }}<a href="tel:{{ address.phone }}">{{ address.phone }}</a>
+                </p>
+              </h3>
+              <p><a href="/account/addresses">{{ 'customer.account.edit_addresses' | t }}</a></p>
+            </div>
+          </div>
+          {% endunless %}
+          {% endfor %}
+          {% endcapture %}
+          {% if default_address != blank or other_address != blank %}
+          <h2>{{ 'customer.addresses.title' | t }} <a href="/account/addresses">{{ 'customer.account.manage_addresses' | t }}</a></h2>
+          <div class="col-address all_address">
+            {{ default_address }}
+            {{ other_address }}
+          </div>
+          {% endif %}
+          {% comment %}
+          <div class="col-order">
+            <div class="address-cover">
+              <h2 class="account-title">{{ 'customer.order.recent_order' | t }}</h2>
+
+              {% paginate customer.orders by 20 %}
+
+              {% if customer.orders.size != 0 %}
+
+              <div class="order-list">
+                <div class="table-wrapper">
+                  <table class="full table">
+                    <thead>
+                      <tr>
+                        <th class="or-id">{{ 'customer.orders.order_number' | t }}</th>
+                        <th class="or-date">{{ 'customer.orders.date' | t }}</th>
+                        <th class="orpro-detail">{{ 'customer.orders.product_name' | t }}</th>
+                        <th class="or-total">{{ 'customer.orders.total' | t }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for order in customer.orders %}
+                      <tr>
+                        <td class="or-id">{{ order.name | link_to: order.customer_url }}</td>
+                        <td class="or-date">{{ order.created_at | date: " %d-%m-%Y" }}</td>
+                        <td class="orpro-detail">{% for line_item in order.line_items %}{{ line_item.title | link_to: line_item.product.url }}{% endfor %}</td>
+                        <td class="or-total">{{ order.total_price | money }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {% else %}
+
+              <p>{{ 'customer.orders.none' | t }}</p>
+
+              {% endif %}
+
+              {% if paginate.pages > 1 %}
+              <div class="text-center">
+                {% include 'pagination-custom' %}
+              </div>
+              {% endif %}
+
+              {% endpaginate %}
+            </div>
+          </div>
+          {% endcomment %}
+          {% for address in customer.addresses %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

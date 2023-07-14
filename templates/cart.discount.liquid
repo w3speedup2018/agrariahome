@@ -1,0 +1,119 @@
+{% layout none %}
+{% assign diff_free_pro = 0 %}
+{% assign diff_buy_pro = 0 %}
+{% assign e_diff_free_pro = 0 %}
+{% assign e_diff_buy_pro = 0 %}
+{% assign pe_buy = 0 %}
+{% assign pe_free = 0 %}
+{% assign full_pe_buy = 0 %}
+{% assign full_pe_free = 0 %}
+
+{% assign free_one_pe_buy = 0 %}
+{% assign free_one_pe_free = 0 %}
+
+{% for item in cart.items %}
+  {% assign Buy_DE = false %}
+  {% assign Buy_EDE = false %}
+  {% assign Buy_PEH = false %}
+  {% assign Buy_PE = false %}
+  {% assign Get_DE = false %}
+  {% assign Get_EDE = false %}
+  {% assign Get_PEH = false %}
+  {% assign Get_PE = false %}
+
+  {% assign free_one_Get_PEH = false %}
+  {% assign free_one_Get_PE = false %}
+
+
+
+  {% for propetie in item.properties %}
+    {% if propetie.first == '_buyItem' and propetie.last == 'DE Buy' %}
+    {% assign Buy_DE = true %}
+	{% elsif propetie.first == '_buyItem' and propetie.last == 'E-DE Buy' %}
+    {% assign Buy_EDE = true %}
+
+    {% elsif propetie.first == '_buyItem' and propetie.last == 'E-DE Free one Buy' %}
+    {% assign free_one_Get_PEH = true %}
+	{% elsif propetie.first == '_buyItem' and propetie.last == 'DE Free' %}
+    {% assign free_one_Get_PE = true %}
+
+
+    {% elsif propetie.first == '_buyItem' and propetie.last == 'PE Half Buy' %}
+    {% assign Buy_PEH = true %}
+    {% elsif propetie.first == '_buyItem' and propetie.last == 'PE Free Buy' %}
+    {% assign Buy_PE = true %}
+    {% elsif propetie.first == '_Promotion' and propetie.last == 'DE Free' %}
+    {% assign Get_DE = true %}
+    {% elsif propetie.first == '_Promotion' and propetie.last == 'E-DE Free' %}
+    {% assign Get_EDE = true %}
+    {% elsif propetie.first == '_Promotion' and propetie.last == 'PE Half' %}
+    {% assign Get_PEH = true %}
+    {% elsif propetie.first == '_Promotion' and propetie.last == 'PE Free' %}
+    {% assign Get_PE = true %}
+    {% endif %}
+  {% endfor %}
+
+  {% if item.discounts != blank and item.product.tags contains 'Get_11' and Get_DE %}
+      {% assign diff_free_pro = diff_free_pro | plus : item.quantity %}
+  {% elsif item.product.tags contains 'Buy_22' and item.discounts == blank and Buy_DE %} 
+      {% assign diff_buy_pro = diff_buy_pro | plus : item.quantity %}
+
+{% elsif item.discounts != blank and item.product.tags contains 'Get1_4all' and free_one_Get_PEH %}
+      {% assign free_one_pe_buy = diff_free_pro | plus : item.quantity %}
+  {% elsif item.product.tags contains 'Get1_4all' and item.discounts == blank and free_one_Get_PEH %} 
+      {% assign free_one_pe_free = diff_buy_pro | plus : item.quantity %}
+
+
+
+  {% elsif item.discounts != blank and item.product.tags contains 'Get_1' and Get_EDE %}
+      {% assign e_diff_free_pro = e_diff_free_pro | plus : item.quantity %}
+  {% elsif item.product.tags contains 'Buy_2' and item.discounts == blank and Buy_EDE  %} 
+      {% assign e_diff_buy_pro = e_diff_buy_pro | plus : item.quantity %}
+  {% elsif item.discounts != blank and item.product.tags contains 'Get_PE' and Get_PEH %} 
+      {% assign pe_free = pe_free | plus : item.quantity %}
+  {% elsif item.product.tags contains 'Buy_PE' and item.discounts == blank and Buy_PEH  %} 
+      {% assign pe_buy = pe_buy | plus : item.quantity %}
+  {% elsif item.discounts != blank and item.product.tags contains 'Get_PE_free' and Get_PE %}
+      {% assign full_pe_free = full_pe_free | plus : item.quantity %}
+  {% elsif item.product.tags contains 'Buy_PE_free' and item.discounts == blank and Buy_PE  %} 
+      {% assign full_pe_buy = full_pe_buy | plus : item.quantity %}
+  {% endif %}
+{% endfor %}
+
+{% unless settings.de %}
+{% assign diff_free_pro = 0 %}
+{% assign diff_buy_pro = 0 %}
+{% endunless %}
+{% unless settings.ede %}
+{% assign e_diff_free_pro = 0 %}
+{% assign e_diff_buy_pro = 0 %}
+{% endunless %}
+{% unless settings.peh %}
+{% assign pe_buy = 0 %}
+{% assign pe_free = 0 %}
+{% endunless %}
+{% unless settings.pe %}
+{% assign full_pe_buy = 0 %}
+{% assign full_pe_free = 0 %}
+{% endunless %}
+
+{% unless settings.one_with_multiple %}
+{% assign free_one_pe_free = 0 %}
+{% assign free_one_pe_buy = 0 %}
+{% endunless %}
+
+
+{
+  "diff_free_pro": {{ diff_free_pro }},
+  "diff_buy_pro": {{ diff_buy_pro }},
+  "e_diff_free_pro": {{ e_diff_free_pro }},
+  "e_diff_buy_pro": {{ e_diff_buy_pro }},
+  "pe_free": {{ pe_free }},
+  "pe_buy": {{ pe_buy }},
+  "full_pe_free": {{ full_pe_free }},
+  "full_pe_buy": {{ full_pe_buy }},
+
+  "free_one_pe_free": {{ free_one_pe_free }},
+  "free_one_pe_buy": {{ free_one_pe_buy }}
+}
+

@@ -1,0 +1,45 @@
+<section class="category-main">
+  {% if section.settings.banner_image != blank %}
+  <div class="category-banner">    
+    <img src="{{ section.settings.banner_image | img_url:'master' }}" alt="citrus">
+  </div>
+  {% endif %}
+  <div class="min-container">
+    <div class="category-title">
+      <h2 class="cms-page-heading">
+        {{ page_title }}
+      </h2>
+    </div>
+    <div class="cms-inners">
+      {% if section.settings.display_type == 'all' %}
+      {% case section.settings.sort %}
+        {% when 'products_high' or 'products_low' %}
+          {%- assign collections = collections | sort: 'all_products_count' -%}
+        {% when 'date' or 'date_reversed' %}
+          {%- assign collections = collections | sort: 'published_at' -%}
+      {% endcase %}
+      {% if section.settings.sort == 'products_low' or section.settings.sort == 'date' or section.settings.sort == 'alphabetical' %}
+        {% for collection in collections %}
+            {% render 'collection-grid-item', collection: collection %}
+        {% endfor %}
+      {% else %}
+        {% for collection in collections reversed %}
+            {% render 'collection-grid-item', collection: collection %}
+        {% endfor %}
+      {% endif %}
+     {% else %}
+      {% for block in section.blocks %}
+        {%- assign collection = collections[block.settings.collection] -%}
+          {% render 'collection-grid-item', collection: collection %}
+      {% endfor %}
+    {% endif %}
+    </div>
+  </div>
+</section>
+{% if section.settings.title_color != blank %}
+<style>
+  .template-page .category-main .category-title .cms-page-heading{
+    color:{{ section.settings.title_color }};
+  }
+</style>
+{% endif %}

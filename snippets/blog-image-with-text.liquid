@@ -1,0 +1,20 @@
+<div class="col-12 col-md-4 image-with-text__wrapper">
+  <a href="{{ url }}"><img src="{{ image | img_url: "master" }}" class="image-with-text__img" /></a>
+  <a href="{{ url }}"><h3>{{ title }}</h3></a>
+  {{ text }}
+  <a class="image-with-text__button">SHOP NOW</a>
+</div>
+
+<style>
+  .image-with-text__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .image-with-text__button {
+    color: #fff;
+    background: #000;
+    padding: 12px;
+  }
+</style>
